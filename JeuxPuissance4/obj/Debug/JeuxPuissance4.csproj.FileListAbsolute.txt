@@ -20,3 +20,14 @@ D:\WPF-Winforms\Puissance4TCPIP\JeuxPuissance4\JeuxPuissance4\obj\Debug\JeuxPuis
 D:\WPF-Winforms\Puissance4TCPIP\JeuxPuissance4\JeuxPuissance4\obj\Debug\JeuxPuissance4.csproj.CoreCompileInputs.cache
 D:\WPF-Winforms\Puissance4TCPIP\JeuxPuissance4\JeuxPuissance4\obj\Debug\JeuxPuissance4.exe
 D:\WPF-Winforms\Puissance4TCPIP\JeuxPuissance4\JeuxPuissance4\obj\Debug\JeuxPuissance4.pdb
+D:\GitKraken\Puissance4\JeuxPuissance4\bin\Debug\JeuxPuissance4.exe.config
+D:\GitKraken\Puissance4\JeuxPuissance4\bin\Debug\JeuxPuissance4.exe
+D:\GitKraken\Puissance4\JeuxPuissance4\bin\Debug\JeuxPuissance4.pdb
+D:\GitKraken\Puissance4\JeuxPuissance4\obj\Debug\JeuxPuissance4.EcranAcceuil.resources
+D:\GitKraken\Puissance4\JeuxPuissance4\obj\Debug\JeuxPuissance4.EcranConnexion.resources
+D:\GitKraken\Puissance4\JeuxPuissance4\obj\Debug\JeuxPuissance4.EcranJeu.resources
+D:\GitKraken\Puissance4\JeuxPuissance4\obj\Debug\JeuxPuissance4.Properties.Resources.resources
+D:\GitKraken\Puissance4\JeuxPuissance4\obj\Debug\JeuxPuissance4.csproj.GenerateResource.cache
+D:\GitKraken\Puissance4\JeuxPuissance4\obj\Debug\JeuxPuissance4.csproj.CoreCompileInputs.cache
+D:\GitKraken\Puissance4\JeuxPuissance4\obj\Debug\JeuxPuissance4.exe
+D:\GitKraken\Puissance4\JeuxPuissance4\obj\Debug\JeuxPuissance4.pdb

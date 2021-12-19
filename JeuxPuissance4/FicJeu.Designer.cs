@@ -61,6 +61,8 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
+            this.btnDeco = new System.Windows.Forms.ToolStripLabel();
+            this.button1 = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -331,10 +333,11 @@
             this.btnNewPartie,
             this.btnEnregistrer,
             this.btnCharger,
-            this.btnQuitter});
+            this.btnQuitter,
+            this.btnDeco});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(859, 31);
+            this.toolStrip1.Size = new System.Drawing.Size(859, 27);
             this.toolStrip1.TabIndex = 3;
             // 
             // btnNewPartie
@@ -343,7 +346,7 @@
             this.btnNewPartie.Image = global::JeuxPuissance4.Properties.Resources.filenew1;
             this.btnNewPartie.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnNewPartie.Name = "btnNewPartie";
-            this.btnNewPartie.Size = new System.Drawing.Size(133, 28);
+            this.btnNewPartie.Size = new System.Drawing.Size(133, 24);
             this.btnNewPartie.Text = "Nouvelle Partie";
             this.btnNewPartie.Click += new System.EventHandler(this.btnNewPartie_Click);
             // 
@@ -353,7 +356,7 @@
             this.btnEnregistrer.Image = global::JeuxPuissance4.Properties.Resources.filesave;
             this.btnEnregistrer.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnEnregistrer.Name = "btnEnregistrer";
-            this.btnEnregistrer.Size = new System.Drawing.Size(163, 28);
+            this.btnEnregistrer.Size = new System.Drawing.Size(163, 24);
             this.btnEnregistrer.Text = "Enregistrer la partie";
             this.btnEnregistrer.Click += new System.EventHandler(this.btnEnregistrer_Click);
             // 
@@ -363,7 +366,7 @@
             this.btnCharger.Image = global::JeuxPuissance4.Properties.Resources.images;
             this.btnCharger.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnCharger.Name = "btnCharger";
-            this.btnCharger.Size = new System.Drawing.Size(156, 28);
+            this.btnCharger.Size = new System.Drawing.Size(156, 24);
             this.btnCharger.Text = "Charger une partie";
             this.btnCharger.Click += new System.EventHandler(this.btnCharger_Click);
             // 
@@ -373,7 +376,7 @@
             this.btnQuitter.Image = global::JeuxPuissance4.Properties.Resources.leaveicon;
             this.btnQuitter.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnQuitter.Name = "btnQuitter";
-            this.btnQuitter.Size = new System.Drawing.Size(79, 28);
+            this.btnQuitter.Size = new System.Drawing.Size(79, 24);
             this.btnQuitter.Text = "Quitter";
             this.btnQuitter.Click += new System.EventHandler(this.btnQuitter_Click);
             // 
@@ -445,6 +448,23 @@
             this.label7.TabIndex = 7;
             this.label7.Text = "4";
             // 
+            // btnDeco
+            // 
+            this.btnDeco.ForeColor = System.Drawing.Color.Blue;
+            this.btnDeco.Name = "btnDeco";
+            this.btnDeco.Size = new System.Drawing.Size(96, 24);
+            this.btnDeco.Text = "Déconnexion";
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(647, 364);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 8;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // EcranJeu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -452,6 +472,7 @@
             this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(859, 512);
             this.ControlBox = false;
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
@@ -513,5 +534,7 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.ToolStripLabel btnDeco;
+        private System.Windows.Forms.Button button1;
     }
 }

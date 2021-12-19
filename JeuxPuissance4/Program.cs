@@ -16,7 +16,7 @@ namespace JeuxPuissance4
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new EcranJeu());
+            Application.Run(new EcranConnexion());
         }
     }
 }

@@ -4,18 +4,276 @@ using System.Text;
 using System.Windows.Forms;
 using System.Drawing.Drawing2D;
 using System.IO;
-
+using System.Net.Sockets;
+using System.Net;
+using System.Net.NetworkInformation;
 
 namespace JeuxPuissance4
 {
     public partial class EcranJeu : Form
     {
+        private Socket sServer, sClient;
+        private Byte[] bBuffer;
+        private bool ifserver;
+        private string Out;
+
         private Partie partie;
-        public EcranJeu()
+
+        
+        string[,] cases;
+
+
+        Joueur joueur1 = null;
+        string NJ1 = "Vide", SJ1;
+        Color CJ1;
+
+        Joueur joueur2 = null;
+        string NJ2 = "Vide", SJ2;
+        Color CJ2;
+
+        Joueur joueurEnCours = null;
+        string JEC = "Vide";
+
+        private string ColJ = "Vide";
+        public EcranJeu(bool a, string b, string NJ, Color CJ)
         {
             InitializeComponent();
             lbJ1.Text = lbJ2.Text = ""; //Initialisation des labels contenant le nom de chaque joueur
+            sServer = null;
+            sClient = null;
+            bBuffer = new byte[256];
+            if (a == true)
+            {
+                Connecter(b);
+                ifserver = false;
+                NJ2 = NJ;
+                CJ2 = CJ;
+            }
+            else
+            {
+                Ecouter();
+                ifserver = true;
+                NJ1 = NJ;
+                CJ1 = CJ;
+            }
+
         }
+        
+        #region SocketRegion
+        private void Ecouter()
+        {
+            sClient = null;
+            IPAddress ipServeur = AddressValide(Dns.GetHostName());
+            sServer = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            sServer.Bind(new IPEndPoint(ipServeur, 8001));
+            sServer.Listen(1);
+            sServer.BeginAccept(new AsyncCallback(SurDemandeConnexion), sServer);
+        }
+        private void Connecter(string a)
+        {
+            if (a.Length > 0)
+            {
+                sClient = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                sClient.Blocking = false;
+                IPAddress IPServeur = AddressValide(a);
+                sClient.BeginConnect(new IPEndPoint(IPServeur, 8001), new AsyncCallback(Surconnexion), sClient);
+            }
+            else MessageBox.Show("Renseignez le serveur");
+        }
+        private IPAddress AddressValide(string MonPC)
+        {
+            IPAddress IpReponse = null;
+
+            if (MonPC.Length > 0)
+            {
+                IPAddress[] ipMachine = Dns.GetHostEntry(MonPC).AddressList;
+                for (int i = 0; i < ipMachine.Length; i++)
+                {
+                    Ping ping = new Ping();
+                    PingReply pingReponse = ping.Send(ipMachine[i]);
+                    if (pingReponse.Status == IPStatus.Success)
+                        if (ipMachine[i].AddressFamily == AddressFamily.InterNetwork)
+                        {
+                            IpReponse = ipMachine[i];
+                            break;
+                        }
+                }
+            }
+            return IpReponse;
+        }
+        private void Surconnexion(IAsyncResult iAR)
+        {
+            Socket Tmp = (Socket)iAR.AsyncState;
+            if (Tmp.Connected)
+            {
+                InitialiserReception(Tmp);
+                EnvoyerParam();
+            }
+            else
+                MessageBox.Show("Serveur inaccessible");
+        }
+        private void SurDemandeConnexion(IAsyncResult iAR)
+        {
+            if (sServer != null)
+            {
+                Socket sTmp = (Socket)iAR.AsyncState;
+                sClient = sTmp.EndAccept(iAR);
+                InitialiserReception(sClient);
+                EnvoyerParam();
+            }
+        }
+        delegate void RenvoiVersInserer(string sTexte);
+        private void InitialiserReception(Socket soc)
+        {
+            soc.BeginReceive(bBuffer, 0, bBuffer.Length, SocketFlags.None, new AsyncCallback(Reception), soc);
+        }
+        private void Reception(IAsyncResult iAR)
+        {
+            if (sClient != null)
+            {
+                Socket Tmp = (Socket)iAR.AsyncState;
+                if (Tmp.EndReceive(iAR) > 0)
+                {
+                    InsererItem(Encoding.Unicode.GetString(bBuffer));
+                    InitialiserReception(Tmp);
+                }
+                else
+                {
+                    Tmp.Disconnect(true);
+                    Tmp.Close();
+                    if (sServer != null)
+                        sServer.BeginAccept(new AsyncCallback(SurDemandeConnexion), sServer);
+                    sClient = null;
+                }
+            }
+        }
+        private void InsererItem(object oTexte)
+        {
+           /* if (tbNomRecu.InvokeRequired || tbClrRecu.InvokeRequired || tbColRecu.InvokeRequired)
+            {
+                RenvoiVersInserer f = new RenvoiVersInserer(InsererItem);
+                Invoke(f, new object[] { (string)oTexte });
+            }
+            else
+            {*/
+            Out = (string)oTexte;
+
+            Recevoir(Out);
+   
+        }
+        public void Recevoir(string Jeu)
+        {
+            cases = new string[6, 7];
+            string _NJ1 = "", _CJ1 = "", _SJ1 = "", _NJ2 = "", _CJ2 = "", _SJ2 = "", _JEC = "";
+            
+            Color C1 = Color.Red, C2 = Color.Yellow;
+
+            _NJ1 = Jeu.Split(new string[] { "/" }, 49, StringSplitOptions.None)[0];
+            _CJ1 = Jeu.Split(new string[] { "/" }, 49, StringSplitOptions.None)[1];
+            _SJ1 = Jeu.Split(new string[] { "/" }, 49, StringSplitOptions.None)[2];
+
+            _NJ2 = Jeu.Split(new string[] { "/" }, 49, StringSplitOptions.None)[3];
+            _CJ2 = Jeu.Split(new string[] { "/" }, 49, StringSplitOptions.None)[4];
+            _SJ2 = Jeu.Split(new string[] { "/" }, 49, StringSplitOptions.None)[5];
+
+            _JEC = Jeu.Split(new string[] { "/" }, 49, StringSplitOptions.None)[6];
+
+            _CJ1 = _CJ1.Split(new string[] { "[", "]" }, 3, StringSplitOptions.None)[1];
+            _CJ2 = _CJ2.Split(new string[] { "[", "]" }, 3, StringSplitOptions.None)[1];
+
+            switch (_CJ1)
+            {
+                case "Red":
+                    C1 = Color.Red;
+                    break;
+                case "Yellow":
+                    C1 = Color.Yellow;
+                    break;
+                case "Green":
+                    C1 = Color.Green;
+                    break;
+                case "Blue":
+                    C1 = Color.Blue;
+                    break;
+            }
+            switch (_CJ2)
+            {
+                case "Red":
+                    C2 = Color.Red;
+                    break;
+                case "Yellow":
+                    C2 = Color.Yellow;
+                    break;
+                case "Green":
+                    C2 = Color.Green;
+                    break;
+                case "Blue":
+                    C2 = Color.Blue;
+                    break;
+            }
+           /* int cpt = 7;
+            for (int i = 0; i < 6; i++)
+                for (int j = 0; j < 7; j++)
+                {
+                    cases[i, j] = Jeu.Split(new string[] { "/" }, 49, StringSplitOptions.None)[cpt];
+                    cpt++;
+                }*/
+
+            if(_NJ1!="Vide"&&_NJ2!="Vide")
+            {
+                if (ifserver == true)
+                {
+                    NJ2 = _NJ2;
+                    SJ2 = _SJ2;
+                    CJ2 = C2;
+                    CreerNouvellePartie();
+                }
+                else
+                {
+                    NJ1 = _NJ1;
+                    SJ1 = _SJ1;
+                    CJ2 = C1;
+                    if(_JEC!="Vide")
+                    {
+                        JEC = _JEC;
+                        CreerNouvellePartie();
+                    }
+                }
+            }
+            
+        }
+        public void EnvoyerParam()
+        {
+            string Jeu = NJ1 + "/" + CJ1 + "/" + SJ1 + "/" + NJ2 + "/" + CJ2 + "/" + SJ2 + "/" + JEC ;
+            EnvoyerSocket(Jeu);
+        }
+        public void EnvoyerTout()
+        {
+            string Jeu = joueur1.GetNom() + "/" + joueur1.GetClr() + "/" + joueur1.GetScore() + "/" + joueur2.GetNom() + "/" + joueur2.GetClr() + "/" + joueur2.GetScore() + "/" + joueurEnCours.GetNom() + ColJ;
+            EnvoyerSocket(Jeu);
+        }
+        public void EnvoyerCharger()
+        {
+            string Jeu = joueur1.GetNom() + "/" + joueur1.GetClr() + "/" + joueur1.GetScore() + "/" + joueur2.GetNom() + "/" + joueur2.GetClr() + "/" + joueur2.GetScore() + "/" + joueurEnCours.GetNom() + partie.GetPlateau().GetPlayerSave();
+            EnvoyerSocket(Jeu);
+        }
+        public void EnvoyerSocket(string json)
+        {
+            if (sClient == null)
+            {
+                DialogResult r = MessageBox.Show("Client ou serveur inacessible", "Erreur de connexion",
+                    MessageBoxButtons.OK, MessageBoxIcon.None,
+                    MessageBoxDefaultButton.Button1, (MessageBoxOptions)0x40000);
+
+                Environment.Exit(0);
+            }
+            else
+            {
+                sClient.Send(Encoding.Unicode.GetBytes(json));
+            }
+
+        }
+        #endregion
         private PictureBox CreationPions(Color couleur)
         {
             PictureBox PBPion = new PictureBox();
@@ -64,59 +322,62 @@ namespace JeuxPuissance4
             // Met à jour la fenetre
             MettreAJourFenetre();
         }
+        
         private void CreerNouvellePartie()
         {
-            // Déclare les joueurs
-            Joueur joueur1 = null;
-            Joueur joueur2 = null;
-            Joueur joueurEnCours = null;
-            //Enabled les bouton pour être pret a jouer
-            btn1.Enabled = btn2.Enabled = btn3.Enabled = btn4.Enabled = btn5.Enabled = btn6.Enabled = btn7.Enabled = true;
+            // btn1.Enabled = btn2.Enabled = btn3.Enabled = btn4.Enabled = btn5.Enabled = btn6.Enabled = btn7.Enabled = true;
+            joueur1 = new Joueur(NJ1, CJ1, 1);
+            joueur2 = new Joueur(NJ2, CJ2, 2);
 
-            // Crée une boite de dialogue pour demander le nom des joueurs
-            EcranAcceuil DiagNom = new EcranAcceuil();
-            do
+            // Vide le plateau
+            tableLayoutPanel2.Controls.Clear();
+
+            // Met à jour le nom des joueurs
+            lbJ1.Text = joueur1.GetNom();
+            lbJ2.Text = joueur2.GetNom();
+
+            // Met à jour la couleur des joueurs
+            clJ1.Text = joueur1.GetClr().ToString().Split(new string[] { "[", "]" }, 3, StringSplitOptions.None)[1];
+            clJ2.Text = joueur2.GetClr().ToString().Split(new string[] { "[", "]" }, 3, StringSplitOptions.None)[1];
+            // Met à Jour les scores
+            NbVicJ1.Text = joueur1.GetScore().ToString();
+            NbVicJ2.Text = joueur2.GetScore().ToString();
+
+            joueur1.SetScore(int.Parse(SJ1));
+            joueur2.SetScore(int.Parse(SJ2));
+
+            // Vide le plateau
+            tableLayoutPanel2.Controls.Clear();
+
+            //après avoir reçu les param de chaque
+            //si serveur je créer partie puis tire au sort et envoie à qui le tour.
+            //si client attendre que JEC est différent de Vide puis créer une partie avec
+            //if(JEC==joueur2.GetNom())
+            //        partie = new Partie(joueur1, joueur2, 0);
+            //    else
+            //        partie = new Partie(joueur1, joueur2, 1);
+
+            if(ifserver==true)
             {
-                // Lance la boite de dialogue
-                if (DiagNom.ShowDialog() == DialogResult.OK)
-                {
-                    if (DiagNom.GetPseudoJ1() == "" || DiagNom.GetPseudoJ2() == "" || DiagNom.GetPseudoJ2() == DiagNom.GetPseudoJ1())
-                        MessageBox.Show("Les nom doivent être différent et non nuls");
-                    else
-                    {
-                        // Récupère le résultat et crée les joueurs
-                        joueur1 = new Joueur(DiagNom.GetPseudoJ1(), DiagNom.GetCouleurJ1(), 1);
-                        joueur2 = new Joueur(DiagNom.GetPseudoJ2(), DiagNom.GetCouleurJ2(), 2);
-
-                        // Vide le plateau
-                        tableLayoutPanel2.Controls.Clear();
-
-                        // Met à jour le nom des joueurs
-                        lbJ1.Text = joueur1.GetNom();
-                        lbJ2.Text = joueur2.GetNom();
-
-                        // Met à jour la couleur des joueurs
-                        clJ1.Text = joueur1.GetClr().ToString().Split(new string[] { "[", "]" }, 3, StringSplitOptions.None)[1];
-                        clJ2.Text = joueur2.GetClr().ToString().Split(new string[] { "[", "]" }, 3, StringSplitOptions.None)[1];
-                        // Met à Jour les scores
-                        NbVicJ1.Text = "0";
-                        NbVicJ2.Text = "0";
-
-                        // Créé la partie
-                        partie = new Partie(joueur1, joueur2);
-                        joueurEnCours = partie.tirerAuSortJoueur();
-                        MessageBox.Show(joueurEnCours.GetNom() + " commence la partie");
-                        statusStrip1.Items[0].Text = joueurEnCours.GetNom() + " à toi de jouer";
-
-                        // Met à jour la fenetre
-                        MettreAJourFenetre();
-                    }
-                }
+                partie = new Partie(joueur1, joueur2);
+                joueurEnCours = partie.tirerAuSortJoueur();
+            }
+            else
+            {
+                if (JEC == joueur2.GetNom())
+                    partie = new Partie(joueur1, joueur2, 0);
                 else
-                {
-                    Application.Exit();
-                }
-            } while (DiagNom.GetPseudoJ1() == "" || DiagNom.GetPseudoJ2() == ""||DiagNom.GetPseudoJ2()==DiagNom.GetPseudoJ1());
+                    partie = new Partie(joueur1, joueur2, 1);
+
+                joueurEnCours = partie.GetJoueur();
+            }
+
+            MessageBox.Show(joueurEnCours.GetNom() + " commence la partie");
+            statusStrip1.Items[0].Text = joueurEnCours.GetNom() + " à toi de jouer";
+
+            // Met à jour la fenetre
+            MettreAJourFenetre();
+
         }
         private void BtnJeu_Click(object sender, EventArgs e)
         {
@@ -251,7 +512,7 @@ namespace JeuxPuissance4
         }
         private void EcranJeu_Load(object sender, EventArgs e)
         {
-            CreerNouvellePartie();
+            //CreerNouvellePartie();
         }
         private void btnQuitter_Click(object sender, EventArgs e)
         {
@@ -261,6 +522,12 @@ namespace JeuxPuissance4
         {
             EnregistrerPartie();
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            EnvoyerParam();
+        }
+
         private void btnCharger_Click(object sender, EventArgs e)
         {
             ChargerPartie();
@@ -294,6 +561,7 @@ namespace JeuxPuissance4
                 }
             }
         }
+
         private void ChargerPartie()
         {
             // Déclare les joueurs

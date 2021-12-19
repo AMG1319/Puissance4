@@ -53,6 +53,12 @@
     <Compile Include="FicAcceuil.Designer.cs">
       <DependentUpon>FicAcceuil.cs</DependentUpon>
     </Compile>
+    <Compile Include="FicConnexion.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FicConnexion.Designer.cs">
+      <DependentUpon>FicConnexion.cs</DependentUpon>
+    </Compile>
     <Compile Include="FicJeu.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -66,6 +72,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="FicAcceuil.resx">
       <DependentUpon>FicAcceuil.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FicConnexion.resx">
+      <DependentUpon>FicConnexion.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FicJeu.resx">
       <DependentUpon>FicJeu.cs</DependentUpon>

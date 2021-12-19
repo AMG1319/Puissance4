@@ -13,35 +13,20 @@ namespace JeuxPuissance4
 {
     public partial class EcranAcceuil : Form
     {
-        private Color CouleurJ1, CouleurJ2;
-        public EcranAcceuil()
+        private Color CouleurJ1;
+        private bool a;
+        private string b;
+        public EcranAcceuil(bool _a, string _b)
         {
             InitializeComponent();
+            a = _a;
+            b = _b;
         }
         private void EcranAcceuil_Load(object sender, EventArgs e)
         {
             InitialisationPictureBox();                             // Initialisation des picturebox
         }
-        /* Méthode pour récupérer le pseudo des joueurs*/
-        public string GetPseudoJ1()
-        {
-            return tbNomJ1.Text;
-        }
-        public string GetPseudoJ2()
-        {
-            return tbNomJ2.Text;
-        }
 
-    /* Méthode pour récupérer les couleurs des joueurs*/
-        public Color GetCouleurJ1()
-        {
-            return CouleurJ1;
-        }
-        public Color GetCouleurJ2()
-        {
-            return CouleurJ2;
-        }
-        
     /* Initialise les picture box de la fenêtre*/
         private void InitialisationPictureBox()
         {
@@ -60,12 +45,7 @@ namespace JeuxPuissance4
             pbPionJaune1.Image = PionJaune;
             pbPionVert1.Image  = PionVert;
             pbPionBleu1.Image  = PionBleu;
-            pbPionRouge2.Image = PionRouge;
-            pbPionJaune2.Image = PionJaune;
-            pbPionVert2.Image  = PionVert;
-            pbPionBleu2.Image  = PionBleu;
-            CouleurJ1 = Color.Red;              // Met la couleur Rouge par defaut au joueur 1
-            CouleurJ2 = Color.Yellow;           // Met la couleur Jaune par défaut au joueur 2
+
         }
     /*Renvoie l'image d'un pion en fonction de sa couleur*/
         private Image CreationPions(Color couleur)
@@ -98,24 +78,26 @@ namespace JeuxPuissance4
         {
             CouleurJ1 = Color.Blue;
         }
-    /*Choix de la couleur du joueur 2 via radiobutton*/
-        private void R2_CheckedChanged(object sender, EventArgs e)
-        {
-            CouleurJ2 = Color.Red;
-        }
-        private void J2_CheckedChanged(object sender, EventArgs e)
-        {
-            CouleurJ2 = Color.Yellow;
-        }
-        private void V2_CheckedChanged(object sender, EventArgs e)
-        {
-            CouleurJ2 = Color.Green;
-        }
-        private void B2_CheckedChanged(object sender, EventArgs e)
-        {
-            CouleurJ2 = Color.Blue;
-        }
+
         #endregion
 
+        private void btnValider_Click(object sender, EventArgs e)
+        {
+            if((CouleurJ1 != Color.Blue && CouleurJ1 != Color.Green && CouleurJ1 != Color.Yellow && CouleurJ1 != Color.Red ) || tbNomJ1.Text==null)
+            {
+                MessageBox.Show("Veuillez insérez un nom et choisir une couleur svp");
+            }
+            else
+            {
+                EcranJeu f = new EcranJeu(a, b,tbNomJ1.Text,CouleurJ1);
+                f.ShowDialog();
+            }
+
+        }
+
+        private void btnAnnuler_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
     }
 }
