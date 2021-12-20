@@ -83,7 +83,7 @@ namespace JeuxPuissance4
 
         private void btnValider_Click(object sender, EventArgs e)
         {
-            if((CouleurJ1 != Color.Blue && CouleurJ1 != Color.Green && CouleurJ1 != Color.Yellow && CouleurJ1 != Color.Red ) || tbNomJ1.Text==null)
+            if((CouleurJ1 != Color.Blue && CouleurJ1 != Color.Green && CouleurJ1 != Color.Yellow && CouleurJ1 != Color.Red ) || tbNomJ1.Text=="")
             {
                 MessageBox.Show("Veuillez insérez un nom et choisir une couleur svp");
             }

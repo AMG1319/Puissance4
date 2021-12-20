@@ -31,3 +31,4 @@ D:\GitKraken\Puissance4\JeuxPuissance4\obj\Debug\JeuxPuissance4.csproj.GenerateR
 D:\GitKraken\Puissance4\JeuxPuissance4\obj\Debug\JeuxPuissance4.csproj.CoreCompileInputs.cache
 D:\GitKraken\Puissance4\JeuxPuissance4\obj\Debug\JeuxPuissance4.exe
 D:\GitKraken\Puissance4\JeuxPuissance4\obj\Debug\JeuxPuissance4.pdb
+D:\GitKraken\Puissance4\JeuxPuissance4\obj\Debug\JeuxPuissance4.csproj.AssemblyReference.cache

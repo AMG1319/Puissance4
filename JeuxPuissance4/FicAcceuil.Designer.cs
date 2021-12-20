@@ -123,13 +123,11 @@
             // 
             this.R1.AutoSize = true;
             this.R1.BackColor = System.Drawing.Color.Black;
-            this.R1.Checked = true;
             this.R1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.R1.Location = new System.Drawing.Point(22, 77);
             this.R1.Name = "R1";
             this.R1.Size = new System.Drawing.Size(16, 15);
             this.R1.TabIndex = 4;
-            this.R1.TabStop = true;
             this.R1.UseVisualStyleBackColor = false;
             this.R1.CheckedChanged += new System.EventHandler(this.R1_CheckedChanged);
             // 

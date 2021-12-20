@@ -161,87 +161,161 @@ namespace JeuxPuissance4
         }
         public void Recevoir(string Jeu)
         {
-            cases = new string[6, 7];
             string[] JeuParam = Jeu.Split('/');
-            string _NJ1, _CJ1, _SJ1, _NJ2 , _CJ2 , _SJ2 , _JEC ;
-            
+            string _NJ1, _CJ1, _SJ1, _NJ2 , _CJ2 , _SJ2 , _JEC ;            
             Color C1 = Color.Red, C2 = Color.Yellow;
+            cases = new string[6, 7];
 
-            _NJ1 = JeuParam[0];
-            _CJ1 = JeuParam[1];
-            _SJ1 = JeuParam[2];
-
-            _NJ2 = JeuParam[3];
-            _CJ2 = JeuParam[4];
-            _SJ2 = JeuParam[5];
-
-            _JEC = JeuParam[6];
-
-            _CJ1 = _CJ1.Split(new string[] { "[", "]" }, 3, StringSplitOptions.None)[1];
-            _CJ2 = _CJ2.Split(new string[] { "[", "]" }, 3, StringSplitOptions.None)[1];
-
-            switch (_CJ1)
+            switch (JeuParam[0])
             {
-                case "Red":
-                    C1 = Color.Red;
+                case "1":
+                    {
+                        /*--------------------------------------EnvoyerParam----------------------------------------------------*/
+                        _NJ1 = JeuParam[1];
+                        _CJ1 = JeuParam[2];
+                        _SJ1 = JeuParam[3];
+
+                        _NJ2 = JeuParam[4];
+                        _CJ2 = JeuParam[5];
+                        _SJ2 = JeuParam[6];
+
+                        _JEC = JeuParam[7];
+
+                        _CJ1 = _CJ1.Split(new string[] { "[", "]" }, 3, StringSplitOptions.None)[1];
+                        _CJ2 = _CJ2.Split(new string[] { "[", "]" }, 3, StringSplitOptions.None)[1];
+
+                        switch (_CJ1)
+                        {
+                            case "Red":
+                                C1 = Color.Red;
+                                break;
+                            case "Yellow":
+                                C1 = Color.Yellow;
+                                break;
+                            case "Green":
+                                C1 = Color.Green;
+                                break;
+                            case "Blue":
+                                C1 = Color.Blue;
+                                break;
+                        }
+                        switch (_CJ2)
+                        {
+                            case "Red":
+                                C2 = Color.Red;
+                                break;
+                            case "Yellow":
+                                C2 = Color.Yellow;
+                                break;
+                            case "Green":
+                                C2 = Color.Green;
+                                break;
+                            case "Blue":
+                                C2 = Color.Blue;
+                                break;
+                        }
+                        if (ifserver == true)
+                        {
+                            if (_NJ2 != "Vide")
+                            {
+                                NJ2 = _NJ2;
+                                SJ2 = _SJ2;
+                                CJ2 = C2;
+                                CreerNouvellePartie();
+                            }
+                        }
+                        else
+                        {
+                            if (_NJ1 != "Vide" && _JEC != "Vide")
+                            {
+                                NJ1 = _NJ1;
+                                SJ1 = _SJ1;
+                                CJ1 = C1;
+                                JEC = _JEC;
+                                CreerNouvellePartie();
+                            }
+                        }
+                        break;
+                        /*------------------------------------------------------------------------------------------------------*/
+                    }
+                case "2":
+                    {
+                        btn1.Enabled = btn2.Enabled = btn3.Enabled = btn4.Enabled = btn5.Enabled = btn6.Enabled = btn7.Enabled = true;
+                        /*--------------------------------------EnvoyerCol------------------------------------------------------*/
+                        Point positionPion;             // Position du pion qui a été ajouté
+                        Point positionPionTableLayout;  // Position du pion dans le table layout
+                        PictureBox PBPion;              // Picture box du pion a ajouter
+                        ColJ = JeuParam[1];
+                        joueurEnCours = partie.GetJoueur();
+                        // Joue la colonne
+                        positionPion = joueurEnCours.Jouer(partie.GetPlateau(), Convert.ToInt32(ColJ));
+
+                        // Si le pion a été ajouté correctement sur le plateau
+                        if (positionPion.X != 0 && positionPion.Y != 0)
+                        {
+                            // Crée un nouveau pion a ajouter
+                            PBPion = CreationPions(joueurEnCours.Couleur);
+
+                            // Calcule les position dans le table layout
+                            positionPionTableLayout = new Point((positionPion.Y - 1), (Plateau.nbLigne - 1) - (positionPion.X - 1));
+
+                            // Ajoute le pion au tableLayout
+                            tableLayoutPanel2.Controls.Add(PBPion, positionPionTableLayout.X, positionPionTableLayout.Y);
+
+                            // Si la partie n'est pas finie
+                            if (!VerifierFinPartie())
+                            {
+                                // Passe au joueur suivant
+                                partie.PasserJoueurSuivant();
+                            }
+                            else
+                            {
+                                //Disable les buttons pour empecher les joueurs de continuer a mettre des jetons
+                                btn1.Enabled = btn2.Enabled = btn3.Enabled = btn4.Enabled = btn5.Enabled = btn6.Enabled = btn7.Enabled = false;
+
+                                // Si c'est un match nul
+                                if (partie.GetPlateau().GetMatchNul())
+                                {
+                                    MessageBox.Show("Vous avez fait un match nul!");
+                                }
+                                else
+                                {
+                                    int y;
+                                    MessageBox.Show(joueurEnCours.GetNom() + " a gagné");
+
+                                    //a joute la vicotire au total
+                                    joueurEnCours.SetScore();
+                                    y = joueurEnCours.GetNum();
+
+                                    //affiche la victoire au bon joueur
+                                    if (y == 1)
+                                    {
+                                        NbVicJ1.Text = joueurEnCours.GetScore().ToString();
+                                    }
+                                    else
+                                    {
+                                        NbVicJ2.Text = joueurEnCours.GetScore().ToString();
+                                    }
+                                }
+                            }
+                        }
+                        MettreAJourFenetre();
+                        break;
+                    }
+                case "3":
                     break;
-                case "Yellow":
-                    C1 = Color.Yellow;
-                    break;
-                case "Green":
-                    C1 = Color.Green;
-                    break;
-                case "Blue":
-                    C1 = Color.Blue;
-                    break;
+
             }
-            switch (_CJ2)
-            {
-                case "Red":
-                    C2 = Color.Red;
-                    break;
-                case "Yellow":
-                    C2 = Color.Yellow;
-                    break;
-                case "Green":
-                    C2 = Color.Green;
-                    break;
-                case "Blue":
-                    C2 = Color.Blue;
-                    break;
-            }
-
-
-            if (ifserver == true)
-            {
-                if (_NJ2 != "Vide")
-                {
-                    NJ2 = _NJ2;
-                    SJ2 = _SJ2;
-                    CJ2 = C2;
-                    CreerNouvellePartie();
-                }
-            }
-            else
-            {
-                if (_NJ1 != "Vide" && _JEC != "Vide")
-                {
-                    NJ1 = _NJ1;
-                    SJ1 = _SJ1;
-                    CJ1 = C1;
-                    JEC = _JEC;
-                    CreerNouvellePartie();                        
-                }
-            }          
+                     
         }
         public void EnvoyerParam()
         {
-            string Jeu = NJ1 + "/" + CJ1 + "/" + SJ1 + "/" + NJ2 + "/" + CJ2 + "/" + SJ2 + "/" + JEC + "/";
+            string Jeu = "1"+"/"+NJ1 + "/" + CJ1 + "/" + SJ1 + "/" + NJ2 + "/" + CJ2 + "/" + SJ2 + "/" + JEC + "/";
             EnvoyerSocket(Jeu);
         }
-        public void EnvoyerTout()
+        public void EnvoyerCol()
         {
-            string Jeu = joueur1.GetNom() + "/" + joueur1.GetClr() + "/" + joueur1.GetScore() + "/" + joueur2.GetNom() + "/" + joueur2.GetClr() + "/" + joueur2.GetScore() + "/" + joueurEnCours.GetNom() + ColJ;
+            string Jeu = "2"+"/"+ColJ+"/";
             EnvoyerSocket(Jeu);
         }
         public void EnvoyerCharger()
@@ -341,26 +415,23 @@ namespace JeuxPuissance4
             // Vide le plateau
             tableLayoutPanel2.Controls.Clear();
 
-            //après avoir reçu les param de chaque
-            //si serveur je créer partie puis tire au sort et envoie à qui le tour.
-            //si client attendre que JEC est différent de Vide puis créer une partie avec
-            //if(JEC==joueur2.GetNom())
-            //        partie = new Partie(joueur1, joueur2, 0);
-            //    else
-            //        partie = new Partie(joueur1, joueur2, 1);
-
             if(ifserver==true)
             {
                 partie = new Partie(joueur1, joueur2);
                 joueurEnCours = partie.tirerAuSortJoueur();
                 JEC = joueurEnCours.GetNom();
                 EnvoyerParam();
+                if(JEC==joueur1.GetNom())
+                {
+                    btn1.Enabled = btn2.Enabled = btn3.Enabled = btn4.Enabled = btn5.Enabled = btn6.Enabled = btn7.Enabled = true;
+                }
             }
             else
             {
                 if(JEC == joueur2.GetNom())
                 {
                     partie = new Partie(joueur1, joueur2, 1);
+                    btn1.Enabled = btn2.Enabled = btn3.Enabled = btn4.Enabled = btn5.Enabled = btn6.Enabled = btn7.Enabled = true;
                 }
                 else
                 {
@@ -370,14 +441,14 @@ namespace JeuxPuissance4
             }
 
             MessageBox.Show(joueurEnCours.GetNom() + " commence la partie");
-            statusStrip1.Items[0].Text = joueurEnCours.GetNom() + " à toi de jouer";
+            statusStrip1.Items[0].Text = " Au tour de " +joueurEnCours.GetNom() + " de jouer";
 
-            // Met à jour la fenetre
             MettreAJourFenetre();
 
         }
         private void BtnJeu_Click(object sender, EventArgs e)
         {
+            btn1.Enabled = btn2.Enabled = btn3.Enabled = btn4.Enabled = btn5.Enabled = btn6.Enabled = btn7.Enabled = false;
             Point positionPion;             // Position du pion qui a été ajouté
             Point positionPionTableLayout;  // Position du pion dans le table layout
             PictureBox PBPion;              // Picture box du pion a ajouter            
@@ -411,7 +482,8 @@ namespace JeuxPuissance4
                     default:
                         throw new Exception("Problème de bouton");
                 }
-
+                ColJ = Convert.ToString(ColonneJouee);
+                EnvoyerCol();
                 // Joue la colonne
                 positionPion = joueurEnCours.Jouer(partie.GetPlateau(), ColonneJouee);
 
@@ -509,7 +581,6 @@ namespace JeuxPuissance4
         }
         private void EcranJeu_Load(object sender, EventArgs e)
         {
-            //CreerNouvellePartie();
         }
         private void btnQuitter_Click(object sender, EventArgs e)
         {
