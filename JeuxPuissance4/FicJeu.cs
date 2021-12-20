@@ -24,11 +24,11 @@ namespace JeuxPuissance4
 
 
         Joueur joueur1 = null;
-        string NJ1 = "Vide", SJ1;
+        string NJ1 = "Vide", SJ1="0";
         Color CJ1;
 
         Joueur joueur2 = null;
-        string NJ2 = "Vide", SJ2;
+        string NJ2 = "Vide", SJ2="0";
         Color CJ2;
 
         Joueur joueurEnCours = null;
@@ -119,7 +119,6 @@ namespace JeuxPuissance4
                 Socket sTmp = (Socket)iAR.AsyncState;
                 sClient = sTmp.EndAccept(iAR);
                 InitialiserReception(sClient);
-                EnvoyerParam();
             }
         }
         delegate void RenvoiVersInserer(string sTexte);
@@ -149,34 +148,34 @@ namespace JeuxPuissance4
         }
         private void InsererItem(object oTexte)
         {
-           /* if (tbNomRecu.InvokeRequired || tbClrRecu.InvokeRequired || tbColRecu.InvokeRequired)
+           if (lbJ1.InvokeRequired || lbJ2.InvokeRequired || clJ1.InvokeRequired || clJ2.InvokeRequired || NbVicJ1.InvokeRequired || NbVicJ2.InvokeRequired)
             {
                 RenvoiVersInserer f = new RenvoiVersInserer(InsererItem);
                 Invoke(f, new object[] { (string)oTexte });
             }
             else
-            {*/
-            Out = (string)oTexte;
-
-            Recevoir(Out);
-   
+            {
+                Out = (string)oTexte;
+                Recevoir(Out);
+            }
         }
         public void Recevoir(string Jeu)
         {
             cases = new string[6, 7];
-            string _NJ1 = "", _CJ1 = "", _SJ1 = "", _NJ2 = "", _CJ2 = "", _SJ2 = "", _JEC = "";
+            string[] JeuParam = Jeu.Split('/');
+            string _NJ1, _CJ1, _SJ1, _NJ2 , _CJ2 , _SJ2 , _JEC ;
             
             Color C1 = Color.Red, C2 = Color.Yellow;
 
-            _NJ1 = Jeu.Split(new string[] { "/" }, 49, StringSplitOptions.None)[0];
-            _CJ1 = Jeu.Split(new string[] { "/" }, 49, StringSplitOptions.None)[1];
-            _SJ1 = Jeu.Split(new string[] { "/" }, 49, StringSplitOptions.None)[2];
+            _NJ1 = JeuParam[0];
+            _CJ1 = JeuParam[1];
+            _SJ1 = JeuParam[2];
 
-            _NJ2 = Jeu.Split(new string[] { "/" }, 49, StringSplitOptions.None)[3];
-            _CJ2 = Jeu.Split(new string[] { "/" }, 49, StringSplitOptions.None)[4];
-            _SJ2 = Jeu.Split(new string[] { "/" }, 49, StringSplitOptions.None)[5];
+            _NJ2 = JeuParam[3];
+            _CJ2 = JeuParam[4];
+            _SJ2 = JeuParam[5];
 
-            _JEC = Jeu.Split(new string[] { "/" }, 49, StringSplitOptions.None)[6];
+            _JEC = JeuParam[6];
 
             _CJ1 = _CJ1.Split(new string[] { "[", "]" }, 3, StringSplitOptions.None)[1];
             _CJ2 = _CJ2.Split(new string[] { "[", "]" }, 3, StringSplitOptions.None)[1];
@@ -211,40 +210,33 @@ namespace JeuxPuissance4
                     C2 = Color.Blue;
                     break;
             }
-           /* int cpt = 7;
-            for (int i = 0; i < 6; i++)
-                for (int j = 0; j < 7; j++)
-                {
-                    cases[i, j] = Jeu.Split(new string[] { "/" }, 49, StringSplitOptions.None)[cpt];
-                    cpt++;
-                }*/
 
-            if(_NJ1!="Vide"&&_NJ2!="Vide")
+
+            if (ifserver == true)
             {
-                if (ifserver == true)
+                if (_NJ2 != "Vide")
                 {
                     NJ2 = _NJ2;
                     SJ2 = _SJ2;
                     CJ2 = C2;
                     CreerNouvellePartie();
                 }
-                else
+            }
+            else
+            {
+                if (_NJ1 != "Vide" && _JEC != "Vide")
                 {
                     NJ1 = _NJ1;
                     SJ1 = _SJ1;
-                    CJ2 = C1;
-                    if(_JEC!="Vide")
-                    {
-                        JEC = _JEC;
-                        CreerNouvellePartie();
-                    }
+                    CJ1 = C1;
+                    JEC = _JEC;
+                    CreerNouvellePartie();                        
                 }
-            }
-            
+            }          
         }
         public void EnvoyerParam()
         {
-            string Jeu = NJ1 + "/" + CJ1 + "/" + SJ1 + "/" + NJ2 + "/" + CJ2 + "/" + SJ2 + "/" + JEC ;
+            string Jeu = NJ1 + "/" + CJ1 + "/" + SJ1 + "/" + NJ2 + "/" + CJ2 + "/" + SJ2 + "/" + JEC + "/";
             EnvoyerSocket(Jeu);
         }
         public void EnvoyerTout()
@@ -342,7 +334,7 @@ namespace JeuxPuissance4
             // Met à Jour les scores
             NbVicJ1.Text = joueur1.GetScore().ToString();
             NbVicJ2.Text = joueur2.GetScore().ToString();
-
+            
             joueur1.SetScore(int.Parse(SJ1));
             joueur2.SetScore(int.Parse(SJ2));
 
@@ -361,15 +353,20 @@ namespace JeuxPuissance4
             {
                 partie = new Partie(joueur1, joueur2);
                 joueurEnCours = partie.tirerAuSortJoueur();
+                JEC = joueurEnCours.GetNom();
+                EnvoyerParam();
             }
             else
             {
-                if (JEC == joueur2.GetNom())
-                    partie = new Partie(joueur1, joueur2, 0);
-                else
+                if(JEC == joueur2.GetNom())
+                {
                     partie = new Partie(joueur1, joueur2, 1);
-
-                joueurEnCours = partie.GetJoueur();
+                }
+                else
+                {
+                    partie = new Partie(joueur1, joueur2, 0);
+                }                       
+                joueurEnCours = partie.GetJoueur();     
             }
 
             MessageBox.Show(joueurEnCours.GetNom() + " commence la partie");
@@ -522,12 +519,6 @@ namespace JeuxPuissance4
         {
             EnregistrerPartie();
         }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            EnvoyerParam();
-        }
-
         private void btnCharger_Click(object sender, EventArgs e)
         {
             ChargerPartie();
