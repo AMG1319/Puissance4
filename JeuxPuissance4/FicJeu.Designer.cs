@@ -96,6 +96,7 @@
             // 
             this.btn2.BackColor = System.Drawing.Color.Black;
             this.btn2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btn2.Enabled = false;
             this.btn2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btn2.ForeColor = System.Drawing.Color.Blue;
             this.btn2.Location = new System.Drawing.Point(59, 3);
@@ -110,6 +111,7 @@
             // 
             this.btn1.BackColor = System.Drawing.Color.Black;
             this.btn1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btn1.Enabled = false;
             this.btn1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btn1.ForeColor = System.Drawing.Color.Blue;
             this.btn1.Location = new System.Drawing.Point(3, 3);
@@ -124,6 +126,7 @@
             // 
             this.btn3.BackColor = System.Drawing.Color.Black;
             this.btn3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btn3.Enabled = false;
             this.btn3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btn3.ForeColor = System.Drawing.Color.Blue;
             this.btn3.Location = new System.Drawing.Point(115, 3);
@@ -138,6 +141,7 @@
             // 
             this.btn4.BackColor = System.Drawing.Color.Black;
             this.btn4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btn4.Enabled = false;
             this.btn4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btn4.ForeColor = System.Drawing.Color.Blue;
             this.btn4.Location = new System.Drawing.Point(171, 3);
@@ -152,6 +156,7 @@
             // 
             this.btn5.BackColor = System.Drawing.Color.Black;
             this.btn5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btn5.Enabled = false;
             this.btn5.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btn5.ForeColor = System.Drawing.Color.Blue;
             this.btn5.Location = new System.Drawing.Point(227, 3);
@@ -166,6 +171,7 @@
             // 
             this.btn6.BackColor = System.Drawing.Color.Black;
             this.btn6.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btn6.Enabled = false;
             this.btn6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btn6.ForeColor = System.Drawing.Color.Blue;
             this.btn6.Location = new System.Drawing.Point(283, 3);
@@ -180,6 +186,7 @@
             // 
             this.btn7.BackColor = System.Drawing.Color.Black;
             this.btn7.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btn7.Enabled = false;
             this.btn7.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btn7.ForeColor = System.Drawing.Color.Blue;
             this.btn7.Location = new System.Drawing.Point(339, 3);
@@ -475,6 +482,8 @@
             this.MinimizeBox = false;
             this.Name = "EcranJeu";
             this.Text = "Puissance 4";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.EcranJeu_FormClosing);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.EcranJeu_FormClosed);
             this.Load += new System.EventHandler(this.EcranJeu_Load);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);

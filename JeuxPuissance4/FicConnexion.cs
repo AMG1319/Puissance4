@@ -19,14 +19,18 @@ namespace JeuxPuissance4
 
         private void btnEcouter_Click(object sender, EventArgs e)
         {
+            Hide();
             EcranAcceuil f = new EcranAcceuil(false, tbServeur.Text);
             f.ShowDialog();
+            Close();
         }
 
         private void btnConnecter_Click(object sender, EventArgs e)
         {
+            Hide();
             EcranAcceuil f = new EcranAcceuil(true, tbServeur.Text);
             f.ShowDialog();
+            Close();
         }
     }
 }

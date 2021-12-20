@@ -33,7 +33,7 @@ namespace JeuxPuissance4
 
         Joueur joueurEnCours = null;
         string JEC = "Vide";
-
+        string ChaineCon;
         private string ColJ = "Vide";
         public EcranJeu(bool a, string b, string NJ, Color CJ)
         {
@@ -42,6 +42,7 @@ namespace JeuxPuissance4
             sServer = null;
             sClient = null;
             bBuffer = new byte[256];
+            ChaineCon = b;
             if (a == true)
             {
                 Connecter(b);
@@ -119,7 +120,13 @@ namespace JeuxPuissance4
                 Socket sTmp = (Socket)iAR.AsyncState;
                 sClient = sTmp.EndAccept(iAR);
                 InitialiserReception(sClient);
+                EnvoyerParam();
             }
+        }
+        private void SurDemandeDeconnexion(IAsyncResult iAR)
+        {
+            Socket Tmp = (Socket)iAR.AsyncState;
+            Tmp.EndDisconnect(iAR);
         }
         delegate void RenvoiVersInserer(string sTexte);
         private void InitialiserReception(Socket soc)
@@ -221,18 +228,36 @@ namespace JeuxPuissance4
                                 NJ2 = _NJ2;
                                 SJ2 = _SJ2;
                                 CJ2 = C2;
-                                CreerNouvellePartie();
+                                if (NJ1 == NJ2 || CJ1 == CJ2)
+                                {
+                                    sServer.Close();
+                                    MessageBox.Show("Le nom des joueurs ainsi que la couleur des jetons doivent être strictement différent !");                                   
+                                    Close();
+                                }
+                                else
+                                    CreerNouvellePartie();
                             }
                         }
                         else
                         {
-                            if (_NJ1 != "Vide" && _JEC != "Vide")
+                            if (_NJ1 != "Vide" )
                             {
                                 NJ1 = _NJ1;
                                 SJ1 = _SJ1;
                                 CJ1 = C1;
-                                JEC = _JEC;
-                                CreerNouvellePartie();
+                                if (NJ1 == NJ2 || CJ1 == CJ2)
+                                {
+                                    sClient.Send(Encoding.Unicode.GetBytes("Déconnexion (client)"));
+                                    sClient.Shutdown(SocketShutdown.Both);
+                                    sClient.BeginDisconnect(false, new AsyncCallback(SurDemandeDeconnexion), sClient);
+                                    MessageBox.Show("Le nom des joueurs ainsi que la couleur des jetons doivent être strictement différent !");
+                                    Close();
+                                }
+                                else if(_JEC != "Vide")
+                                {
+                                    JEC = _JEC;
+                                    CreerNouvellePartie();
+                                }                                
                             }
                         }
                         break;
@@ -391,7 +416,6 @@ namespace JeuxPuissance4
         
         private void CreerNouvellePartie()
         {
-            // btn1.Enabled = btn2.Enabled = btn3.Enabled = btn4.Enabled = btn5.Enabled = btn6.Enabled = btn7.Enabled = true;
             joueur1 = new Joueur(NJ1, CJ1, 1);
             joueur2 = new Joueur(NJ2, CJ2, 2);
 
@@ -408,27 +432,27 @@ namespace JeuxPuissance4
             // Met à Jour les scores
             NbVicJ1.Text = joueur1.GetScore().ToString();
             NbVicJ2.Text = joueur2.GetScore().ToString();
-            
+
             joueur1.SetScore(int.Parse(SJ1));
             joueur2.SetScore(int.Parse(SJ2));
 
             // Vide le plateau
             tableLayoutPanel2.Controls.Clear();
 
-            if(ifserver==true)
+            if (ifserver == true)
             {
                 partie = new Partie(joueur1, joueur2);
                 joueurEnCours = partie.tirerAuSortJoueur();
                 JEC = joueurEnCours.GetNom();
                 EnvoyerParam();
-                if(JEC==joueur1.GetNom())
+                if (JEC == joueur1.GetNom())
                 {
                     btn1.Enabled = btn2.Enabled = btn3.Enabled = btn4.Enabled = btn5.Enabled = btn6.Enabled = btn7.Enabled = true;
                 }
             }
             else
             {
-                if(JEC == joueur2.GetNom())
+                if (JEC == joueur2.GetNom())
                 {
                     partie = new Partie(joueur1, joueur2, 1);
                     btn1.Enabled = btn2.Enabled = btn3.Enabled = btn4.Enabled = btn5.Enabled = btn6.Enabled = btn7.Enabled = true;
@@ -436,15 +460,15 @@ namespace JeuxPuissance4
                 else
                 {
                     partie = new Partie(joueur1, joueur2, 0);
-                }                       
-                joueurEnCours = partie.GetJoueur();     
+                }
+                joueurEnCours = partie.GetJoueur();
             }
 
             MessageBox.Show(joueurEnCours.GetNom() + " commence la partie");
-            statusStrip1.Items[0].Text = " Au tour de " +joueurEnCours.GetNom() + " de jouer";
+            statusStrip1.Items[0].Text = " Au tour de " + joueurEnCours.GetNom() + " de jouer";
 
             MettreAJourFenetre();
-
+                      
         }
         private void BtnJeu_Click(object sender, EventArgs e)
         {
@@ -590,6 +614,27 @@ namespace JeuxPuissance4
         {
             EnregistrerPartie();
         }
+
+        private void EcranJeu_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            if (ifserver == true)
+            {
+                EcranAcceuil f = new EcranAcceuil(false, ChaineCon);
+                f.ShowDialog();
+            }
+            else
+            {
+                EcranAcceuil f = new EcranAcceuil(true, ChaineCon);
+                f.ShowDialog();
+            }
+        }
+
+        private void EcranJeu_FormClosing(object sender, FormClosingEventArgs e)
+        {
+
+
+        }
+
         private void btnCharger_Click(object sender, EventArgs e)
         {
             ChargerPartie();

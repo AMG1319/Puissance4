@@ -19,6 +19,10 @@ namespace JeuxPuissance4
         public EcranAcceuil(bool _a, string _b)
         {
             InitializeComponent();
+            if (_a == false)
+                this.Text += " - Serveur";
+            else
+                this.Text += " - Client";
             a = _a;
             b = _b;
         }
@@ -89,8 +93,10 @@ namespace JeuxPuissance4
             }
             else
             {
+                Hide();
                 EcranJeu f = new EcranJeu(a, b,tbNomJ1.Text,CouleurJ1);
                 f.ShowDialog();
+                Close();
             }
 
         }

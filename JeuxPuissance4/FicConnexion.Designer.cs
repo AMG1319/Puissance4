@@ -50,9 +50,9 @@ namespace JeuxPuissance4
             // 
             this.btnConnecter.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnConnecter.ForeColor = System.Drawing.Color.Blue;
-            this.btnConnecter.Location = new System.Drawing.Point(180, 53);
+            this.btnConnecter.Location = new System.Drawing.Point(165, 50);
             this.btnConnecter.Name = "btnConnecter";
-            this.btnConnecter.Size = new System.Drawing.Size(80, 32);
+            this.btnConnecter.Size = new System.Drawing.Size(95, 32);
             this.btnConnecter.TabIndex = 7;
             this.btnConnecter.Text = "Rejoindre";
             this.btnConnecter.UseVisualStyleBackColor = true;
