@@ -20,7 +20,7 @@ namespace JeuxPuissance4
         private void btnEcouter_Click(object sender, EventArgs e)
         {
             Hide();
-            EcranAcceuil f = new EcranAcceuil(false, tbServeur.Text);
+            EcranJeu f = new EcranJeu(true, tbServeur.Text);
             f.ShowDialog();
             Close();
         }
@@ -28,7 +28,7 @@ namespace JeuxPuissance4
         private void btnConnecter_Click(object sender, EventArgs e)
         {
             Hide();
-            EcranAcceuil f = new EcranAcceuil(true, tbServeur.Text);
+            EcranJeu f = new EcranJeu(false, tbServeur.Text);
             f.ShowDialog();
             Close();
         }

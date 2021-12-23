@@ -15,8 +15,7 @@ namespace JeuxPuissance4
     {
         private Color CouleurJ1;
         private bool a;
-        private string b;
-        bool Capteur = false;
+
 
         private EcranJeu _RefJeu;
         public EcranJeu RefJeu
@@ -25,15 +24,14 @@ namespace JeuxPuissance4
             set { _RefJeu = value; }
         }
 
-        public EcranAcceuil(bool _a, string _b)
+        public EcranAcceuil(bool _a)
         {
             InitializeComponent();
-            if (_a == false)
+            if (_a == true)
             {
                 this.Text += " - Serveur";
                 groupBox1.Text += " 1";
-            }
-                
+            }                
             else
             {
                 this.Text += " - Client";
@@ -41,7 +39,6 @@ namespace JeuxPuissance4
             }
                 
             a = _a;
-            b = _b;
         }
         private void EcranAcceuil_Load(object sender, EventArgs e)
         {
@@ -101,39 +98,18 @@ namespace JeuxPuissance4
         }
 
         #endregion
+        public string GetPseudo()
+        {
+            return tbNomJ1.Text;
+        }
+        public Color GetCouleur()
+        {
+            return CouleurJ1;
+        }
 
         private void btnValider_Click(object sender, EventArgs e)
         {
             
-            if((CouleurJ1 != Color.Blue && CouleurJ1 != Color.Green && CouleurJ1 != Color.Yellow && CouleurJ1 != Color.Red ) || tbNomJ1.Text=="")
-            {
-                MessageBox.Show("Veuillez insérez un nom et choisir une couleur svp");
-            }
-            else if (Capteur ==false)
-            {
-                Capteur = true;
-                Hide();
-                EcranJeu f = new EcranJeu(a, b,tbNomJ1.Text,CouleurJ1);
-                f.RefAccueil = this;
-               // RefJeu = f;
-                f.ShowDialog();
-            }
-            else if(Capteur==true)
-            {
-                if(a==false)
-                {
-                    RefJeu.NJ1 = tbNomJ1.Text;
-                    RefJeu.CJ1 = CouleurJ1;
-                }
-                else
-                {
-                    RefJeu.NJ2 = tbNomJ1.Text;
-                    RefJeu.CJ2 = CouleurJ1;
-                }                
-                Hide();
-                RefJeu.RefAccueil = this;
-                RefJeu.Show();                
-            }
 
         }
         private void btnAnnuler_Click(object sender, EventArgs e)

@@ -185,6 +185,7 @@
             // btnValider
             // 
             this.btnValider.BackColor = System.Drawing.Color.Black;
+            this.btnValider.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.btnValider.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnValider.ForeColor = System.Drawing.Color.Blue;
             this.btnValider.Location = new System.Drawing.Point(183, 232);

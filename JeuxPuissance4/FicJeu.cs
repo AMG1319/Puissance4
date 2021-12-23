@@ -13,14 +13,6 @@ namespace JeuxPuissance4
     public partial class EcranJeu : Form
     {
 
-
-        private EcranAcceuil _RefAccueil;
-        public EcranAcceuil RefAccueil
-        {
-            get { return _RefAccueil; }
-            set { _RefAccueil = value; }
-        }
-
         private Socket sServer, sClient;
         private Byte[] bBuffer;
         private bool ifserver;
@@ -45,29 +37,29 @@ namespace JeuxPuissance4
         private string ColJ = "Vide";
         string ServerName;
 
-        public EcranJeu(bool a, string b, string NJ, Color CJ)
+
+        public EcranJeu(bool a, string b)
         {
             InitializeComponent();
-            lbJ1.Text = lbJ2.Text = ""; //Initialisation des labels contenant le nom de chaque joueur
             sServer = null;
             sClient = null;
             bBuffer = new byte[256];
+
             ServerName = b;
+
             if (a == true)
             {
-                btnCharger.Enabled = btnEnregistrer.Enabled = btnNewPartie.Enabled = false;
-                Connecter(b);
-                ifserver = false;
-                NJ2 = NJ;
-                CJ2 = CJ;
+                // btnDeco.Enabled = false;
+                this.Text += " - Serveur";
+                Ecouter();
+                ifserver = a;
             }
             else
             {
-               // btnDeco.Enabled = false;
-                Ecouter();
-                ifserver = true;
-                NJ1 = NJ;
-                CJ1 = CJ;
+                this.Text += " - Client";
+                btnCharger.Enabled = btnEnregistrer.Enabled= btnNewPartie.Enabled  = false;
+                Connecter(b);
+                ifserver = a;                
             }
         }
        
@@ -119,7 +111,30 @@ namespace JeuxPuissance4
             if (Tmp.Connected)
             {
                 InitialiserReception(Tmp);
-                EnvoyerParam();
+                EcranAcceuil DiagNom = new EcranAcceuil(ifserver);
+                bool exit = false;
+                do
+                {
+                    if (DiagNom.ShowDialog() == DialogResult.OK)
+                    {
+                        if (DiagNom.GetPseudo() != "" || DiagNom.GetCouleur() == Color.Red || DiagNom.GetCouleur() == Color.Yellow || DiagNom.GetCouleur() == Color.Green || DiagNom.GetCouleur() == Color.Blue)
+                        {
+                            NJ2 = DiagNom.GetPseudo();
+                            CJ2 = DiagNom.GetCouleur();
+                            exit = true;
+                        }
+                        else
+                            MessageBox.Show("Veuillez choisir une couleur et mettre un nom svp");
+                        
+                    }
+                    else
+                    {
+                        Application.Exit();
+                        exit = true;
+                    }
+
+                }   while ( exit == false );
+                 EnvoyerParam();
             }
             else
                 MessageBox.Show("Serveur inaccessible");
@@ -131,6 +146,29 @@ namespace JeuxPuissance4
                 Socket sTmp = (Socket)iAR.AsyncState;
                 sClient = sTmp.EndAccept(iAR);
                 InitialiserReception(sClient);
+                EcranAcceuil DiagNom = new EcranAcceuil(ifserver);
+                bool exit = false;
+                do
+                {
+                    if (DiagNom.ShowDialog() == DialogResult.OK)
+                    {
+                        if (DiagNom.GetPseudo() != "" || DiagNom.GetCouleur() == Color.Red || DiagNom.GetCouleur() == Color.Yellow || DiagNom.GetCouleur() == Color.Green || DiagNom.GetCouleur() == Color.Blue)
+                        {
+                            NJ1 = DiagNom.GetPseudo();
+                            CJ1 = DiagNom.GetCouleur();
+                            exit = true;
+                        }
+                        else
+                            MessageBox.Show("Veuillez choisir une couleur et mettre un nom svp");
+
+                    }
+                    else
+                    {
+                        Application.Exit();
+                        exit = true;
+                    }
+
+                } while (exit == false);
                 EnvoyerParam();
             }
         }
@@ -242,10 +280,32 @@ namespace JeuxPuissance4
 
                                 if (NJ1 == NJ2 || CJ1 == CJ2)
                                 {
-                                    Hide();
-                                    RefAccueil.RefJeu = this;
-                                    //RefAccueil.Show();
+                                    MessageBox.Show("Deux joueurs ne peuvent avoir les mêmes noms ni la même couleur de pion");
+                                    EcranAcceuil DiagNom = new EcranAcceuil(ifserver);
+                                    bool exit = false;
+                                    do
+                                    {
+                                        if (DiagNom.ShowDialog() == DialogResult.OK)
+                                        {
+                                            if (DiagNom.GetPseudo() != "" || DiagNom.GetCouleur() == Color.Red || DiagNom.GetCouleur() == Color.Yellow || DiagNom.GetCouleur() == Color.Green || DiagNom.GetCouleur() == Color.Blue)
+                                            {
+                                                NJ1 = DiagNom.GetPseudo();
+                                                CJ1 = DiagNom.GetCouleur();
+                                                exit = true;
+                                            }
+                                            else
+                                                MessageBox.Show("Veuillez choisir une couleur et mettre un nom svp");
+
+                                        }
+                                        else
+                                        {
+                                            Application.Exit();
+                                            exit = true;
+                                        }
+
+                                    } while (exit == false);
                                     EnvoyerParam();
+
                                 }
                                 else
                                     CreerNouvellePartie();
@@ -260,9 +320,30 @@ namespace JeuxPuissance4
                                 CJ1 = C1;
                                 if (NJ1 == NJ2 || CJ1 == CJ2)
                                 {
-                                    Hide();
-                                    RefAccueil.RefJeu = this;
-                                    RefAccueil.Show();
+                                    EcranAcceuil DiagNom = new EcranAcceuil(ifserver);
+                                    bool exit = false;
+                                    MessageBox.Show("Deux joueurs ne peuvent avoir les mêmes noms ni la même couleur de pion");
+                                    do
+                                    {
+                                        if (DiagNom.ShowDialog() == DialogResult.OK)
+                                        {
+                                            if (DiagNom.GetPseudo() != "" || DiagNom.GetCouleur() == Color.Red || DiagNom.GetCouleur() == Color.Yellow || DiagNom.GetCouleur() == Color.Green || DiagNom.GetCouleur() == Color.Blue)
+                                            {
+                                                NJ2 = DiagNom.GetPseudo();
+                                                CJ2 = DiagNom.GetCouleur();
+                                                exit = true;
+                                            }
+                                            else
+                                                MessageBox.Show("Veuillez choisir une couleur et mettre un nom svp");
+
+                                        }
+                                        else
+                                        {
+                                            Application.Exit();
+                                            exit = true;
+                                        }
+
+                                    } while (exit == false);
                                     EnvoyerParam();
                                 }
                                 else if(_JEC != "Vide")
@@ -328,10 +409,12 @@ namespace JeuxPuissance4
                                     if (y == 1)
                                     {
                                         NbVicJ1.Text = joueurEnCours.GetScore().ToString();
+                                        SJ1 = joueurEnCours.GetScore().ToString();
                                     }
                                     else
                                     {
                                         NbVicJ2.Text = joueurEnCours.GetScore().ToString();
+                                        SJ2 = joueurEnCours.GetScore().ToString();
                                     }
                                 }
                             }
@@ -340,6 +423,10 @@ namespace JeuxPuissance4
                         break;
                     }
                 case "3":
+                    {
+                        JEC = JeuParam[1];
+                        RefaireUnePartie();
+                    }                    
                     break;
 
             }
@@ -358,6 +445,11 @@ namespace JeuxPuissance4
         public void EnvoyerCharger()
         {
             string Jeu = joueur1.GetNom() + "/" + joueur1.GetClr() + "/" + joueur1.GetScore() + "/" + joueur2.GetNom() + "/" + joueur2.GetClr() + "/" + joueur2.GetScore() + "/" + joueurEnCours.GetNom() + partie.GetPlateau().GetPlayerSave();
+            EnvoyerSocket(Jeu);
+        }
+        public void EnvoyerRe()
+        {
+            string Jeu = "3" + "/" + joueurEnCours.GetNom();
             EnvoyerSocket(Jeu);
         }
         public void EnvoyerSocket(string json)
@@ -393,18 +485,13 @@ namespace JeuxPuissance4
         private void btnNewPartie_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show("Voulez-vous recommencer avec les mêmes joueurs ?", "Confirmer", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
                 RefaireUnePartie();
-            else
-                CreerNouvellePartie();
+            }              
+
         }
         private void RefaireUnePartie()
         {
-            Joueur joueur1 = null;
-            Joueur joueur2 = null;
-            Joueur joueurEnCours = null;
-
-            //Enabled les bouton pour être pret a jouer
-            btn1.Enabled = btn2.Enabled = btn3.Enabled = btn4.Enabled = btn5.Enabled = btn6.Enabled = btn7.Enabled = true;
 
             joueur1 = partie.GetJoueur(0);
             joueur2 = partie.GetJoueur(1);
@@ -416,11 +503,37 @@ namespace JeuxPuissance4
             lbJ1.Text = joueur1.GetNom();
             lbJ2.Text = joueur2.GetNom();
 
-            // Crée la partie
-            partie = new Partie(joueur1, joueur2);
-            joueurEnCours = partie.tirerAuSortJoueur();
-            MessageBox.Show(joueurEnCours.GetNom() + " Commence la partie");
-            statusStrip1.Items[0].Text = joueurEnCours.GetNom() + " à toi de jouer";
+            NbVicJ1.Text = joueur1.GetScore().ToString();
+            NbVicJ2.Text = joueur2.GetScore().ToString();
+
+            if (ifserver == true)
+            {
+                partie = new Partie(joueur1, joueur2);
+                joueurEnCours = partie.tirerAuSortJoueur();
+                JEC = joueurEnCours.GetNom();
+                EnvoyerRe();
+                if (JEC == joueur1.GetNom())
+                {
+                    btn1.Enabled = btn2.Enabled = btn3.Enabled = btn4.Enabled = btn5.Enabled = btn6.Enabled = btn7.Enabled = true;
+                }
+            }
+            else
+            {
+                if (JEC == joueur2.GetNom())
+                {
+                    partie = new Partie(joueur1, joueur2, 1);
+                    btn1.Enabled = btn2.Enabled = btn3.Enabled = btn4.Enabled = btn5.Enabled = btn6.Enabled = btn7.Enabled = true;
+                }
+                else
+                {
+                    partie = new Partie(joueur1, joueur2, 0);
+                }
+                joueurEnCours = partie.GetJoueur();
+            }
+
+            MessageBox.Show(joueurEnCours.GetNom() + " commence la partie");
+            statusStrip1.Items[0].Text = " Au tour de " + joueurEnCours.GetNom() + " de jouer";
+
 
             // Met à jour la fenetre
             MettreAJourFenetre();
@@ -442,11 +555,11 @@ namespace JeuxPuissance4
             clJ1.Text = joueur1.GetClr().ToString().Split(new string[] { "[", "]" }, 3, StringSplitOptions.None)[1];
             clJ2.Text = joueur2.GetClr().ToString().Split(new string[] { "[", "]" }, 3, StringSplitOptions.None)[1];
             // Met à Jour les scores
-            NbVicJ1.Text = joueur1.GetScore().ToString();
-            NbVicJ2.Text = joueur2.GetScore().ToString();
+            //NbVicJ1.Text = joueur1.GetScore().ToString();
+            //NbVicJ2.Text = joueur2.GetScore().ToString();
 
-            joueur1.SetScore(int.Parse(SJ1));
-            joueur2.SetScore(int.Parse(SJ2));
+            //joueur1.SetScore(int.Parse(SJ1));
+            //joueur2.SetScore(int.Parse(SJ2));
 
             // Vide le plateau
             tableLayoutPanel2.Controls.Clear();
@@ -564,10 +677,12 @@ namespace JeuxPuissance4
                             if (y == 1)
                             {
                                 NbVicJ1.Text = joueurEnCours.GetScore().ToString();
+                                SJ1 = joueurEnCours.GetScore().ToString();
                             }
                             else
                             {
                                 NbVicJ2.Text = joueurEnCours.GetScore().ToString();
+                                SJ2 = joueurEnCours.GetScore().ToString();
                             }
                         }
                     }
@@ -635,11 +750,6 @@ namespace JeuxPuissance4
                 sServer.Close();
                 sServer = null;
             }
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            RefAccueil.Show();
         }
 
         private void btnCharger_Click(object sender, EventArgs e)
