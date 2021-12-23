@@ -484,7 +484,7 @@ namespace JeuxPuissance4
         }
         private void btnNewPartie_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Voulez-vous recommencer avec les mêmes joueurs ?", "Confirmer", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (MessageBox.Show("Voulez-vous recommencer une partie ?", "Confirmer", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 RefaireUnePartie();
             }              
