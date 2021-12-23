@@ -16,13 +16,30 @@ namespace JeuxPuissance4
         private Color CouleurJ1;
         private bool a;
         private string b;
+        bool Capteur = false;
+
+        private EcranJeu _RefJeu;
+        public EcranJeu RefJeu
+        {
+            get { return _RefJeu; }
+            set { _RefJeu = value; }
+        }
+
         public EcranAcceuil(bool _a, string _b)
         {
             InitializeComponent();
             if (_a == false)
+            {
                 this.Text += " - Serveur";
+                groupBox1.Text += " 1";
+            }
+                
             else
+            {
                 this.Text += " - Client";
+                groupBox1.Text += " 2";
+            }
+                
             a = _a;
             b = _b;
         }
@@ -87,20 +104,38 @@ namespace JeuxPuissance4
 
         private void btnValider_Click(object sender, EventArgs e)
         {
+            
             if((CouleurJ1 != Color.Blue && CouleurJ1 != Color.Green && CouleurJ1 != Color.Yellow && CouleurJ1 != Color.Red ) || tbNomJ1.Text=="")
             {
                 MessageBox.Show("Veuillez insérez un nom et choisir une couleur svp");
             }
-            else
+            else if (Capteur ==false)
             {
+                Capteur = true;
                 Hide();
                 EcranJeu f = new EcranJeu(a, b,tbNomJ1.Text,CouleurJ1);
+                f.RefAccueil = this;
+               // RefJeu = f;
                 f.ShowDialog();
-                Close();
+            }
+            else if(Capteur==true)
+            {
+                if(a==false)
+                {
+                    RefJeu.NJ1 = tbNomJ1.Text;
+                    RefJeu.CJ1 = CouleurJ1;
+                }
+                else
+                {
+                    RefJeu.NJ2 = tbNomJ1.Text;
+                    RefJeu.CJ2 = CouleurJ1;
+                }                
+                Hide();
+                RefJeu.RefAccueil = this;
+                RefJeu.Show();                
             }
 
         }
-
         private void btnAnnuler_Click(object sender, EventArgs e)
         {
             Close();

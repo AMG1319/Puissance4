@@ -54,6 +54,7 @@
             this.btnEnregistrer = new System.Windows.Forms.ToolStripButton();
             this.btnCharger = new System.Windows.Forms.ToolStripButton();
             this.btnQuitter = new System.Windows.Forms.ToolStripButton();
+            this.btnDeco = new System.Windows.Forms.ToolStripLabel();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
@@ -61,7 +62,7 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
-            this.btnDeco = new System.Windows.Forms.ToolStripLabel();
+            this.button1 = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -386,6 +387,14 @@
             this.btnQuitter.Text = "Quitter";
             this.btnQuitter.Click += new System.EventHandler(this.btnQuitter_Click);
             // 
+            // btnDeco
+            // 
+            this.btnDeco.ForeColor = System.Drawing.Color.Blue;
+            this.btnDeco.Name = "btnDeco";
+            this.btnDeco.Size = new System.Drawing.Size(96, 24);
+            this.btnDeco.Text = "Déconnexion";
+            this.btnDeco.Click += new System.EventHandler(this.btnDeco_Click);
+            // 
             // statusStrip1
             // 
             this.statusStrip1.BackColor = System.Drawing.Color.Black;
@@ -454,12 +463,15 @@
             this.label7.TabIndex = 7;
             this.label7.Text = "4";
             // 
-            // btnDeco
+            // button1
             // 
-            this.btnDeco.ForeColor = System.Drawing.Color.Blue;
-            this.btnDeco.Name = "btnDeco";
-            this.btnDeco.Size = new System.Drawing.Size(96, 24);
-            this.btnDeco.Text = "Déconnexion";
+            this.button1.Location = new System.Drawing.Point(542, 356);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 8;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // EcranJeu
             // 
@@ -468,6 +480,7 @@
             this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(859, 512);
             this.ControlBox = false;
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
@@ -482,9 +495,6 @@
             this.MinimizeBox = false;
             this.Name = "EcranJeu";
             this.Text = "Puissance 4";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.EcranJeu_FormClosing);
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.EcranJeu_FormClosed);
-            this.Load += new System.EventHandler(this.EcranJeu_Load);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
@@ -532,5 +542,6 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.ToolStripLabel btnDeco;
+        private System.Windows.Forms.Button button1;
     }
 }

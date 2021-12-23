@@ -12,6 +12,15 @@ namespace JeuxPuissance4
 {
     public partial class EcranJeu : Form
     {
+
+
+        private EcranAcceuil _RefAccueil;
+        public EcranAcceuil RefAccueil
+        {
+            get { return _RefAccueil; }
+            set { _RefAccueil = value; }
+        }
+
         private Socket sServer, sClient;
         private Byte[] bBuffer;
         private bool ifserver;
@@ -24,17 +33,18 @@ namespace JeuxPuissance4
 
 
         Joueur joueur1 = null;
-        string NJ1 = "Vide", SJ1="0";
-        Color CJ1;
+        public string NJ1 = "Vide", SJ1="0";
+        public Color CJ1;
 
         Joueur joueur2 = null;
-        string NJ2 = "Vide", SJ2="0";
-        Color CJ2;
+        public string NJ2 = "Vide", SJ2="0";
+        public Color CJ2;
 
         Joueur joueurEnCours = null;
         string JEC = "Vide";
-        string ChaineCon;
         private string ColJ = "Vide";
+        string ServerName;
+
         public EcranJeu(bool a, string b, string NJ, Color CJ)
         {
             InitializeComponent();
@@ -42,9 +52,10 @@ namespace JeuxPuissance4
             sServer = null;
             sClient = null;
             bBuffer = new byte[256];
-            ChaineCon = b;
+            ServerName = b;
             if (a == true)
             {
+                btnCharger.Enabled = btnEnregistrer.Enabled = btnNewPartie.Enabled = false;
                 Connecter(b);
                 ifserver = false;
                 NJ2 = NJ;
@@ -52,14 +63,14 @@ namespace JeuxPuissance4
             }
             else
             {
+               // btnDeco.Enabled = false;
                 Ecouter();
                 ifserver = true;
                 NJ1 = NJ;
                 CJ1 = CJ;
             }
-
         }
-        
+       
         #region SocketRegion
         private void Ecouter()
         {
@@ -228,11 +239,13 @@ namespace JeuxPuissance4
                                 NJ2 = _NJ2;
                                 SJ2 = _SJ2;
                                 CJ2 = C2;
+
                                 if (NJ1 == NJ2 || CJ1 == CJ2)
                                 {
-                                    sServer.Close();
-                                    MessageBox.Show("Le nom des joueurs ainsi que la couleur des jetons doivent être strictement différent !");                                   
-                                    Close();
+                                    Hide();
+                                    RefAccueil.RefJeu = this;
+                                    //RefAccueil.Show();
+                                    EnvoyerParam();
                                 }
                                 else
                                     CreerNouvellePartie();
@@ -247,11 +260,10 @@ namespace JeuxPuissance4
                                 CJ1 = C1;
                                 if (NJ1 == NJ2 || CJ1 == CJ2)
                                 {
-                                    sClient.Send(Encoding.Unicode.GetBytes("Déconnexion (client)"));
-                                    sClient.Shutdown(SocketShutdown.Both);
-                                    sClient.BeginDisconnect(false, new AsyncCallback(SurDemandeDeconnexion), sClient);
-                                    MessageBox.Show("Le nom des joueurs ainsi que la couleur des jetons doivent être strictement différent !");
-                                    Close();
+                                    Hide();
+                                    RefAccueil.RefJeu = this;
+                                    RefAccueil.Show();
+                                    EnvoyerParam();
                                 }
                                 else if(_JEC != "Vide")
                                 {
@@ -603,9 +615,6 @@ namespace JeuxPuissance4
 
             }
         }
-        private void EcranJeu_Load(object sender, EventArgs e)
-        {
-        }
         private void btnQuitter_Click(object sender, EventArgs e)
         {
             Application.Exit();
@@ -614,25 +623,23 @@ namespace JeuxPuissance4
         {
             EnregistrerPartie();
         }
-
-        private void EcranJeu_FormClosed(object sender, FormClosedEventArgs e)
+        private void btnDeco_Click(object sender, EventArgs e)
         {
-            if (ifserver == true)
+            if (ifserver==false)
             {
-                EcranAcceuil f = new EcranAcceuil(false, ChaineCon);
-                f.ShowDialog();
+                sClient.Shutdown(SocketShutdown.Both);
+                sClient.BeginDisconnect(false, new AsyncCallback(SurDemandeDeconnexion), sClient);
             }
-            else
+            else if (ifserver == true)
             {
-                EcranAcceuil f = new EcranAcceuil(true, ChaineCon);
-                f.ShowDialog();
+                sServer.Close();
+                sServer = null;
             }
         }
 
-        private void EcranJeu_FormClosing(object sender, FormClosingEventArgs e)
+        private void button1_Click(object sender, EventArgs e)
         {
-
-
+            RefAccueil.Show();
         }
 
         private void btnCharger_Click(object sender, EventArgs e)
