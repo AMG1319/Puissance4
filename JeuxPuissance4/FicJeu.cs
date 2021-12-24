@@ -113,6 +113,7 @@ namespace JeuxPuissance4
                 InitialiserReception(Tmp);
                 EcranAcceuil DiagNom = new EcranAcceuil(ifserver);
                 bool exit = false;
+                //this.Enabled = false;
                 do
                 {
                     if (DiagNom.ShowDialog() == DialogResult.OK)
@@ -134,7 +135,8 @@ namespace JeuxPuissance4
                     }
 
                 }   while ( exit == false );
-                 EnvoyerParam();
+               // this.Enabled = true;
+                EnvoyerParam();
             }
             else
                 MessageBox.Show("Serveur inaccessible");
@@ -148,6 +150,7 @@ namespace JeuxPuissance4
                 InitialiserReception(sClient);
                 EcranAcceuil DiagNom = new EcranAcceuil(ifserver);
                 bool exit = false;
+                //this.Enabled = false;
                 do
                 {
                     if (DiagNom.ShowDialog() == DialogResult.OK)
@@ -169,6 +172,7 @@ namespace JeuxPuissance4
                     }
 
                 } while (exit == false);
+                //this.Enabled = true;
                 EnvoyerParam();
             }
         }
@@ -205,10 +209,10 @@ namespace JeuxPuissance4
         private void InsererItem(object oTexte)
         {
            if (lbJ1.InvokeRequired || lbJ2.InvokeRequired || clJ1.InvokeRequired || clJ2.InvokeRequired || NbVicJ1.InvokeRequired || NbVicJ2.InvokeRequired)
-            {
+           {
                 RenvoiVersInserer f = new RenvoiVersInserer(InsererItem);
                 Invoke(f, new object[] { (string)oTexte });
-            }
+           }
             else
             {
                 Out = (string)oTexte;
@@ -283,6 +287,7 @@ namespace JeuxPuissance4
                                     MessageBox.Show("Deux joueurs ne peuvent avoir les mêmes noms ni la même couleur de pion");
                                     EcranAcceuil DiagNom = new EcranAcceuil(ifserver);
                                     bool exit = false;
+                                    this.Enabled = false;
                                     do
                                     {
                                         if (DiagNom.ShowDialog() == DialogResult.OK)
@@ -304,6 +309,7 @@ namespace JeuxPuissance4
                                         }
 
                                     } while (exit == false);
+                                    this.Enabled = true;
                                     EnvoyerParam();
 
                                 }
@@ -322,6 +328,7 @@ namespace JeuxPuissance4
                                 {
                                     EcranAcceuil DiagNom = new EcranAcceuil(ifserver);
                                     bool exit = false;
+                                    this.Enabled = false;
                                     MessageBox.Show("Deux joueurs ne peuvent avoir les mêmes noms ni la même couleur de pion");
                                     do
                                     {
@@ -344,6 +351,7 @@ namespace JeuxPuissance4
                                         }
 
                                     } while (exit == false);
+                                    this.Enabled = true;
                                     EnvoyerParam();
                                 }
                                 else if(_JEC != "Vide")
@@ -426,8 +434,33 @@ namespace JeuxPuissance4
                     {
                         JEC = JeuParam[1];
                         RefaireUnePartie();
-                    }                    
-                    break;
+                        break;
+                    }
+                case "4":
+                    {
+                        if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+                        {
+                            if (!File.Exists(saveFileDialog1.FileName))
+                            {
+                                File.Create(saveFileDialog1.FileName).Close();
+                                using (StreamWriter sw = File.AppendText(saveFileDialog1.FileName))
+                                {
+                                    sw.WriteLine(Jeu);
+                                }
+                            }
+                            else
+                            {
+                                File.WriteAllText(saveFileDialog1.FileName, String.Empty);
+                                using (StreamWriter sw = File.AppendText(saveFileDialog1.FileName))
+                                {
+                                    sw.WriteLine(Jeu);
+                                }
+                            }
+                        }
+                        //ChargerPartie2(Jeu);
+                        break;
+                    }
+                    
 
             }
                      
@@ -442,16 +475,13 @@ namespace JeuxPuissance4
             string Jeu = "2"+"/"+ColJ+"/";
             EnvoyerSocket(Jeu);
         }
-        public void EnvoyerCharger()
-        {
-            string Jeu = joueur1.GetNom() + "/" + joueur1.GetClr() + "/" + joueur1.GetScore() + "/" + joueur2.GetNom() + "/" + joueur2.GetClr() + "/" + joueur2.GetScore() + "/" + joueurEnCours.GetNom() + partie.GetPlateau().GetPlayerSave();
-            EnvoyerSocket(Jeu);
-        }
         public void EnvoyerRe()
         {
             string Jeu = "3" + "/" + joueurEnCours.GetNom();
             EnvoyerSocket(Jeu);
         }
+
+        
         public void EnvoyerSocket(string json)
         {
             if (sClient == null)
@@ -468,6 +498,7 @@ namespace JeuxPuissance4
             }
 
         }
+        
         #endregion
         private PictureBox CreationPions(Color couleur)
         {
@@ -770,8 +801,8 @@ namespace JeuxPuissance4
                     File.Create(saveFileDialog1.FileName).Close();
                     using (StreamWriter sw = File.AppendText(saveFileDialog1.FileName))
                     {
-                        sw.WriteLine(joueur1.GetNom() + "/" + joueur1.GetClr() + "/" + joueur1.GetScore() + "/" + joueur2.GetNom() + "/" + joueur2.GetClr() + "/" + joueur2.GetScore() + "/" + joueurEnCours.GetNom()
-                            + partie.GetPlateau().GetPlayerSave());
+                        sw.WriteLine("4"+"/"+joueur1.GetNom() + "/" + joueur1.GetClr() + "/" + joueur1.GetScore() + "/" + joueur2.GetNom() + "/" + joueur2.GetClr() + "/" + joueur2.GetScore() + "/" + joueurEnCours.GetNom()
+                            + partie.GetPlateau().GetPlayerSave() + "/");
                     }
                 }
                 else
@@ -779,16 +810,168 @@ namespace JeuxPuissance4
                     File.WriteAllText(saveFileDialog1.FileName, String.Empty);
                     using (StreamWriter sw = File.AppendText(saveFileDialog1.FileName))
                     {
-                        sw.WriteLine(joueur1.GetNom() + "/" + joueur1.GetClr() + "/" + joueur1.GetScore() + "/" + joueur2.GetNom() + "/" + joueur2.GetClr() + "/" + joueur2.GetScore() + "/" + joueurEnCours.GetNom()
-                            + partie.GetPlateau().GetPlayerSave());
+                        sw.WriteLine("4" + "/" + joueur1.GetNom() + "/" + joueur1.GetClr() + "/" + joueur1.GetScore() + "/" + joueur2.GetNom() + "/" + joueur2.GetClr() + "/" + joueur2.GetScore() + "/" + joueurEnCours.GetNom()
+                            + partie.GetPlateau().GetPlayerSave() + "/");
                     }
                 }
             }
         }
+        private void ChargerPartie2(string text)
+        {
+            /*if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                if (!File.Exists(saveFileDialog1.FileName))
+                {
+                    File.Create(saveFileDialog1.FileName).Close();
+                    using (StreamWriter sw = File.AppendText(saveFileDialog1.FileName))
+                    {
+                        sw.WriteLine(text);
+                    }
+                }
+                else
+                {
+                    File.WriteAllText(saveFileDialog1.FileName, String.Empty);
+                    using (StreamWriter sw = File.AppendText(saveFileDialog1.FileName))
+                    {
+                        sw.WriteLine(text);
+                    }
+                }
+            }*/
+             btn1.Enabled = btn2.Enabled = btn3.Enabled = btn4.Enabled = btn5.Enabled = btn6.Enabled = btn7.Enabled = false;
+             Joueur joueur1 = null;
+             Joueur joueur2 = null;
+             Point PositionPion;             // Position du pion qui a été ajouté
+             Point PositionPionTableLayout;  // Position du pion dans le table layout
+             PictureBox PBPion;              // Picture box du pion a ajouter    
+             string[,] cases;
+             string NJ1 = "", CJ1 = "", SJ1 = "", NJ2 = "", CJ2 = "", SJ2 = "", JEC = "";
+             cases = new string[6, 7];
+             Color C1 = Color.Red, C2 = Color.Yellow;
+
+             statusStrip1.Items[0].Text = "Chargement";
+
+             string[] JeuParam = text.Split('/');
+
+             NJ1 = JeuParam[1];
+             CJ1 = JeuParam[2];
+             SJ1 = JeuParam[3];
+             NJ2 = JeuParam[4];
+             CJ2 = JeuParam[5];
+             SJ2 = JeuParam[6];
+             JEC = JeuParam[7];
+
+             CJ1 = CJ1.Split(new string[] { "[", "]" }, 3, StringSplitOptions.None)[1];
+             CJ2 = CJ2.Split(new string[] { "[", "]" }, 3, StringSplitOptions.None)[1];
+
+             switch (CJ1)
+             {
+                 case "Red":
+                     C1 = Color.Red;
+                     break;
+                 case "Yellow":
+                     C1 = Color.Yellow;
+                     break;
+                 case "Green":
+                     C1 = Color.Green;
+                     break;
+                 case "Blue":
+                     C1 = Color.Blue;
+                     break;
+             }
+             switch (CJ2)
+             {
+                 case "Red":
+                     C2 = Color.Red;
+                     break;
+                 case "Yellow":
+                     C2 = Color.Yellow;
+                     break;
+                 case "Green":
+                     C2 = Color.Green;
+                     break;
+                 case "Blue":
+                     C2 = Color.Blue;
+                     break;
+             }
+
+             int cpt = 8;
+             for (int i = 0; i < 6; i++)
+                 for (int j = 0; j < 7; j++)
+                 {
+                     cases[i, j] = JeuParam[cpt];
+                     cpt++;
+                 }
+
+
+
+             // Récupère le résultat et crée les joueurs
+             joueur1 = new Joueur(NJ1, C1, 1);
+             joueur2 = new Joueur(NJ2, C2, 2);
+
+             joueur1.SetScore(int.Parse(SJ1));
+             joueur2.SetScore(int.Parse(SJ2));
+
+             // Vide le plateau
+             tableLayoutPanel2.Controls.Clear();
+
+             // Met à jour le nom des joueurs
+             lbJ1.Text = joueur1.GetNom();
+             lbJ2.Text = joueur2.GetNom();
+
+             // Met à jour la couleur des joueurs
+             clJ1.Text = joueur1.GetClr().ToString().Split(new string[] { "[", "]" }, 3, StringSplitOptions.None)[1];
+             clJ2.Text = joueur2.GetClr().ToString().Split(new string[] { "[", "]" }, 3, StringSplitOptions.None)[1];
+
+             // Met à Jour les scores
+             NbVicJ1.Text = joueur1.GetScore().ToString();
+             NbVicJ2.Text = joueur2.GetScore().ToString();
+
+             // Créé la partie
+             if (JEC == joueur1.GetNom())
+                 partie = new Partie(joueur1, joueur2, 0);
+             else
+             {
+                 partie = new Partie(joueur1, joueur2, 1);
+                 partie = new Partie(joueur1, joueur2, 0);
+             }                
+
+             for (int i = 0; i < 6; i++)
+                 for (int j = 0; j < 7; j++)
+                 {
+                     if (cases[i, j] == joueur1.GetNom())
+                     {
+                         PositionPion = joueur1.Jouer(partie.GetPlateau(), j + 1);
+                         PBPion = CreationPions(joueur1.Couleur);
+                         PositionPionTableLayout = new Point((PositionPion.Y - 1), (Plateau.nbLigne - 1) - (PositionPion.X - 1));
+                         tableLayoutPanel2.Controls.Add(PBPion, PositionPionTableLayout.X, PositionPionTableLayout.Y);
+                     }
+                     else if (cases[i, j] == joueur2.GetNom())
+                     {
+                         PositionPion = joueur2.Jouer(partie.GetPlateau(), j + 1);
+                         PBPion = CreationPions(joueur2.Couleur);
+                         PositionPionTableLayout = new Point((PositionPion.Y - 1), (Plateau.nbLigne - 1) - (PositionPion.X - 1));
+                         tableLayoutPanel2.Controls.Add(PBPion, PositionPionTableLayout.X, PositionPionTableLayout.Y);
+                     }
+                 }
+             if (VerifierFinPartie())
+             {
+                 btn1.Enabled = btn2.Enabled = btn3.Enabled = btn4.Enabled = btn5.Enabled = btn6.Enabled = btn7.Enabled = false;
+                 if (partie.GetPlateau().GetMatchNul())
+                 {
+                     MessageBox.Show("Vous avez fait un match nul!");
+                 }
+                 else
+                 {
+                     MessageBox.Show(partie.GetJoueur().GetNom() + " avait gagné, Recommencez pour vous vengez !");
+                 }
+             }
+             MettreAJourFenetre();
+
+        }
 
         private void ChargerPartie()
         {
-            // Déclare les joueurs
+            btn1.Enabled = btn2.Enabled = btn3.Enabled = btn4.Enabled = btn5.Enabled = btn6.Enabled = btn7.Enabled = false;
             Joueur joueur1 = null;
             Joueur joueur2 = null;
             Point PositionPion;             // Position du pion qui a été ajouté
@@ -804,13 +987,15 @@ namespace JeuxPuissance4
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 text = File.ReadAllText(openFileDialog1.FileName, Encoding.UTF8);
-                NJ1 = text.Split(new string[] { "/" }, 49, StringSplitOptions.None)[0];
-                CJ1 = text.Split(new string[] { "/" }, 49, StringSplitOptions.None)[1];
-                SJ1 = text.Split(new string[] { "/" }, 49, StringSplitOptions.None)[2];
-                NJ2 = text.Split(new string[] { "/" }, 49, StringSplitOptions.None)[3];
-                CJ2 = text.Split(new string[] { "/" }, 49, StringSplitOptions.None)[4];
-                SJ2 = text.Split(new string[] { "/" }, 49, StringSplitOptions.None)[5];
-                JEC = text.Split(new string[] { "/" }, 49, StringSplitOptions.None)[6];
+                string[] JeuParam = text.Split('/');
+
+                NJ1 = JeuParam[1];
+                CJ1 = JeuParam[2];
+                SJ1 = JeuParam[3];
+                NJ2 = JeuParam[4];
+                CJ2 = JeuParam[5];
+                SJ2 = JeuParam[6];
+                JEC = JeuParam[7];
 
                 CJ1 = CJ1.Split(new string[] { "[", "]" }, 3, StringSplitOptions.None)[1];
                 CJ2 = CJ2.Split(new string[] { "[", "]" }, 3, StringSplitOptions.None)[1];
@@ -845,16 +1030,36 @@ namespace JeuxPuissance4
                         C2 = Color.Blue;
                         break;
                 }
-                int cpt = 7;
+
+                int cpt = 8;
                 for (int i = 0; i < 6; i++)
                     for (int j = 0; j < 7; j++)
                     {
-                        cases[i, j] = text.Split(new string[] { "/" }, 49, StringSplitOptions.None)[cpt];
+                        cases[i, j] = JeuParam[cpt];
                         cpt++;
                     }
+                if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    if (!File.Exists(saveFileDialog1.FileName))
+                    {
+                        File.Create(saveFileDialog1.FileName).Close();
+                        using (StreamWriter sw = File.AppendText(saveFileDialog1.FileName))
+                        {
+                            sw.WriteLine(text);
+                        }
+                    }
+                    else
+                    {
+                        File.WriteAllText(saveFileDialog1.FileName, String.Empty);
+                        using (StreamWriter sw = File.AppendText(saveFileDialog1.FileName))
+                        {
+                            sw.WriteLine(text);
+                        }
+                    }
+                }
+                EnvoyerSocket(text);
             }
-            //Enabled les bouton pour être pret a jouer
-            btn1.Enabled = btn2.Enabled = btn3.Enabled = btn4.Enabled = btn5.Enabled = btn6.Enabled = btn7.Enabled = false;
+            
 
             // Récupère le résultat et crée les joueurs
             joueur1 = new Joueur(NJ1, C1, 1);
@@ -880,9 +1085,13 @@ namespace JeuxPuissance4
 
             // Créé la partie
             if(JEC==joueur1.GetNom())
+            {
                 partie = new Partie(joueur1, joueur2, 0);
+                btn1.Enabled = btn2.Enabled = btn3.Enabled = btn4.Enabled = btn5.Enabled = btn6.Enabled = btn7.Enabled = true;
+            }                
             else
                 partie = new Partie(joueur1, joueur2, 1);
+
             
             for (int i = 0; i < 6; i++)
                 for (int j = 0; j < 7; j++)
@@ -914,9 +1123,8 @@ namespace JeuxPuissance4
                     MessageBox.Show(partie.GetJoueur().GetNom() + " avait gagné, Recommencez pour vous vengez !");
                 }
             }
-            else
-                btn1.Enabled = btn2.Enabled = btn3.Enabled = btn4.Enabled = btn5.Enabled = btn6.Enabled = btn7.Enabled = true;
             MettreAJourFenetre();  
+            
         }
     }
 }
