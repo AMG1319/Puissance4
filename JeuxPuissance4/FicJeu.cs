@@ -43,7 +43,7 @@ namespace JeuxPuissance4
             InitializeComponent();
             sServer = null;
             sClient = null;
-            bBuffer = new byte[256];
+            bBuffer = new byte[512];
 
             ServerName = b;
 
@@ -438,26 +438,7 @@ namespace JeuxPuissance4
                     }
                 case "4":
                     {
-                        if (saveFileDialog1.ShowDialog() == DialogResult.OK)
-                        {
-                            if (!File.Exists(saveFileDialog1.FileName))
-                            {
-                                File.Create(saveFileDialog1.FileName).Close();
-                                using (StreamWriter sw = File.AppendText(saveFileDialog1.FileName))
-                                {
-                                    sw.WriteLine(Jeu);
-                                }
-                            }
-                            else
-                            {
-                                File.WriteAllText(saveFileDialog1.FileName, String.Empty);
-                                using (StreamWriter sw = File.AppendText(saveFileDialog1.FileName))
-                                {
-                                    sw.WriteLine(Jeu);
-                                }
-                            }
-                        }
-                        //ChargerPartie2(Jeu);
+                        ChargerPartie2(Jeu);
                         break;
                     }
                     
@@ -818,25 +799,7 @@ namespace JeuxPuissance4
         }
         private void ChargerPartie2(string text)
         {
-            /*if (saveFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                if (!File.Exists(saveFileDialog1.FileName))
-                {
-                    File.Create(saveFileDialog1.FileName).Close();
-                    using (StreamWriter sw = File.AppendText(saveFileDialog1.FileName))
-                    {
-                        sw.WriteLine(text);
-                    }
-                }
-                else
-                {
-                    File.WriteAllText(saveFileDialog1.FileName, String.Empty);
-                    using (StreamWriter sw = File.AppendText(saveFileDialog1.FileName))
-                    {
-                        sw.WriteLine(text);
-                    }
-                }
-            }*/
+           
              btn1.Enabled = btn2.Enabled = btn3.Enabled = btn4.Enabled = btn5.Enabled = btn6.Enabled = btn7.Enabled = false;
              Joueur joueur1 = null;
              Joueur joueur2 = null;
@@ -932,8 +895,8 @@ namespace JeuxPuissance4
              else
              {
                  partie = new Partie(joueur1, joueur2, 1);
-                 partie = new Partie(joueur1, joueur2, 0);
-             }                
+                btn1.Enabled = btn2.Enabled = btn3.Enabled = btn4.Enabled = btn5.Enabled = btn6.Enabled = btn7.Enabled = true;
+            }                
 
              for (int i = 0; i < 6; i++)
                  for (int j = 0; j < 7; j++)
@@ -1038,25 +1001,7 @@ namespace JeuxPuissance4
                         cases[i, j] = JeuParam[cpt];
                         cpt++;
                     }
-                if (saveFileDialog1.ShowDialog() == DialogResult.OK)
-                {
-                    if (!File.Exists(saveFileDialog1.FileName))
-                    {
-                        File.Create(saveFileDialog1.FileName).Close();
-                        using (StreamWriter sw = File.AppendText(saveFileDialog1.FileName))
-                        {
-                            sw.WriteLine(text);
-                        }
-                    }
-                    else
-                    {
-                        File.WriteAllText(saveFileDialog1.FileName, String.Empty);
-                        using (StreamWriter sw = File.AppendText(saveFileDialog1.FileName))
-                        {
-                            sw.WriteLine(text);
-                        }
-                    }
-                }
+
                 EnvoyerSocket(text);
             }
             
