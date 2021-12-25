@@ -7,6 +7,7 @@ using System.IO;
 using System.Net.Sockets;
 using System.Net;
 using System.Net.NetworkInformation;
+using System.Threading;
 
 namespace JeuxPuissance4
 {
@@ -35,7 +36,6 @@ namespace JeuxPuissance4
         Joueur joueurEnCours = null;
         string JEC = "Vide";
         private string ColJ = "Vide";
-        string ServerName;
 
 
         public EcranJeu(bool a, string b)
@@ -45,7 +45,6 @@ namespace JeuxPuissance4
             sClient = null;
             bBuffer = new byte[512];
 
-            ServerName = b;
 
             if (a == true)
             {
@@ -62,8 +61,14 @@ namespace JeuxPuissance4
                 ifserver = a;                
             }
         }
-       
+
         #region SocketRegion
+        private void InsererItemThread(string sTexte)
+        {
+            Thread ThreadInsererItem = new Thread(new ParameterizedThreadStart(InsererItem));
+            ThreadInsererItem.Start(sTexte);
+
+        }
         private void Ecouter()
         {
             sClient = null;
@@ -113,7 +118,7 @@ namespace JeuxPuissance4
                 InitialiserReception(Tmp);
                 EcranAcceuil DiagNom = new EcranAcceuil(ifserver);
                 bool exit = false;
-                //this.Enabled = false;
+                this.Enabled = false;
                 do
                 {
                     if (DiagNom.ShowDialog() == DialogResult.OK)
@@ -135,7 +140,7 @@ namespace JeuxPuissance4
                     }
 
                 }   while ( exit == false );
-               // this.Enabled = true;
+                this.Enabled = true;
                 EnvoyerParam();
             }
             else
@@ -150,7 +155,7 @@ namespace JeuxPuissance4
                 InitialiserReception(sClient);
                 EcranAcceuil DiagNom = new EcranAcceuil(ifserver);
                 bool exit = false;
-                //this.Enabled = false;
+                this.Enabled = false;
                 do
                 {
                     if (DiagNom.ShowDialog() == DialogResult.OK)
@@ -172,7 +177,7 @@ namespace JeuxPuissance4
                     }
 
                 } while (exit == false);
-                //this.Enabled = true;
+                this.Enabled = true;
                 EnvoyerParam();
             }
         }
@@ -193,7 +198,8 @@ namespace JeuxPuissance4
                 Socket Tmp = (Socket)iAR.AsyncState;
                 if (Tmp.EndReceive(iAR) > 0)
                 {
-                    InsererItem(Encoding.Unicode.GetString(bBuffer));
+                    InsererItemThread(Encoding.Unicode.GetString(bBuffer));
+                    //InsererItem(Encoding.Unicode.GetString(bBuffer));
                     InitialiserReception(Tmp);
                 }
                 else
@@ -441,6 +447,13 @@ namespace JeuxPuissance4
                         ChargerPartie2(Jeu);
                         break;
                     }
+                case "5":
+                    {
+                        MessageBox.Show("Client Déconnecté");
+                        btn1.Enabled = btn2.Enabled = btn3.Enabled = btn4.Enabled = btn5.Enabled = btn6.Enabled = btn7.Enabled = false;
+                        btnDecon.Enabled=btnCharger.Enabled=btnNewPartie.Enabled = false;
+                        break;
+                    }
                     
 
             }
@@ -461,8 +474,12 @@ namespace JeuxPuissance4
             string Jeu = "3" + "/" + joueurEnCours.GetNom();
             EnvoyerSocket(Jeu);
         }
+        public void EnvoyerDeco()
+        {
+            string Jeu = "5" + "/" ;
+            EnvoyerSocket(Jeu);
+        }
 
-        
         public void EnvoyerSocket(string json)
         {
             if (sClient == null)
@@ -750,24 +767,31 @@ namespace JeuxPuissance4
         {
             EnregistrerPartie();
         }
-        private void btnDeco_Click(object sender, EventArgs e)
-        {
-            if (ifserver==false)
-            {
-                sClient.Shutdown(SocketShutdown.Both);
-                sClient.BeginDisconnect(false, new AsyncCallback(SurDemandeDeconnexion), sClient);
-            }
-            else if (ifserver == true)
-            {
-                sServer.Close();
-                sServer = null;
-            }
-        }
 
         private void btnCharger_Click(object sender, EventArgs e)
         {
             ChargerPartie();
         }
+
+        private void btnDecon_Click(object sender, EventArgs e)
+        {
+            if (ifserver == false)
+            {
+                EnvoyerDeco();
+                btn1.Enabled = btn2.Enabled = btn3.Enabled = btn4.Enabled = btn5.Enabled = btn6.Enabled = btn7.Enabled = false;
+                btnDecon.Enabled = false;
+                sClient.Shutdown(SocketShutdown.Both);
+                sClient.BeginDisconnect(false, new AsyncCallback(SurDemandeDeconnexion), sClient);
+            }
+            else if (sClient == null)
+            {
+                sServer.Close();
+                sServer = null;
+            }
+            else
+                MessageBox.Show("Client connecté = pas de deco");
+        }
+
         private void EnregistrerPartie()
         {
             Joueur joueur1, joueur2, joueurEnCours;

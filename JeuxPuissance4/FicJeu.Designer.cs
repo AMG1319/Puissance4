@@ -50,11 +50,6 @@
             this.lbJ1 = new System.Windows.Forms.Label();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.btnNewPartie = new System.Windows.Forms.ToolStripButton();
-            this.btnEnregistrer = new System.Windows.Forms.ToolStripButton();
-            this.btnCharger = new System.Windows.Forms.ToolStripButton();
-            this.btnQuitter = new System.Windows.Forms.ToolStripButton();
-            this.btnDeco = new System.Windows.Forms.ToolStripLabel();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
@@ -62,6 +57,11 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
+            this.btnNewPartie = new System.Windows.Forms.ToolStripButton();
+            this.btnEnregistrer = new System.Windows.Forms.ToolStripButton();
+            this.btnCharger = new System.Windows.Forms.ToolStripButton();
+            this.btnQuitter = new System.Windows.Forms.ToolStripButton();
+            this.btnDecon = new System.Windows.Forms.ToolStripButton();
             this.tableLayoutPanel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -340,59 +340,11 @@
             this.btnEnregistrer,
             this.btnCharger,
             this.btnQuitter,
-            this.btnDeco});
+            this.btnDecon});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(859, 27);
             this.toolStrip1.TabIndex = 3;
-            // 
-            // btnNewPartie
-            // 
-            this.btnNewPartie.ForeColor = System.Drawing.Color.Blue;
-            this.btnNewPartie.Image = global::JeuxPuissance4.Properties.Resources.filenew1;
-            this.btnNewPartie.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnNewPartie.Name = "btnNewPartie";
-            this.btnNewPartie.Size = new System.Drawing.Size(133, 24);
-            this.btnNewPartie.Text = "Nouvelle Partie";
-            this.btnNewPartie.Click += new System.EventHandler(this.btnNewPartie_Click);
-            // 
-            // btnEnregistrer
-            // 
-            this.btnEnregistrer.ForeColor = System.Drawing.Color.Blue;
-            this.btnEnregistrer.Image = global::JeuxPuissance4.Properties.Resources.filesave;
-            this.btnEnregistrer.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnEnregistrer.Name = "btnEnregistrer";
-            this.btnEnregistrer.Size = new System.Drawing.Size(163, 24);
-            this.btnEnregistrer.Text = "Enregistrer la partie";
-            this.btnEnregistrer.Click += new System.EventHandler(this.btnEnregistrer_Click);
-            // 
-            // btnCharger
-            // 
-            this.btnCharger.ForeColor = System.Drawing.Color.Blue;
-            this.btnCharger.Image = global::JeuxPuissance4.Properties.Resources.images;
-            this.btnCharger.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnCharger.Name = "btnCharger";
-            this.btnCharger.Size = new System.Drawing.Size(156, 24);
-            this.btnCharger.Text = "Charger une partie";
-            this.btnCharger.Click += new System.EventHandler(this.btnCharger_Click);
-            // 
-            // btnQuitter
-            // 
-            this.btnQuitter.ForeColor = System.Drawing.Color.Blue;
-            this.btnQuitter.Image = global::JeuxPuissance4.Properties.Resources.leaveicon;
-            this.btnQuitter.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnQuitter.Name = "btnQuitter";
-            this.btnQuitter.Size = new System.Drawing.Size(79, 24);
-            this.btnQuitter.Text = "Quitter";
-            this.btnQuitter.Click += new System.EventHandler(this.btnQuitter_Click);
-            // 
-            // btnDeco
-            // 
-            this.btnDeco.ForeColor = System.Drawing.Color.Blue;
-            this.btnDeco.Name = "btnDeco";
-            this.btnDeco.Size = new System.Drawing.Size(96, 24);
-            this.btnDeco.Text = "Déconnexion";
-            this.btnDeco.Click += new System.EventHandler(this.btnDeco_Click);
             // 
             // statusStrip1
             // 
@@ -462,6 +414,56 @@
             this.label7.TabIndex = 7;
             this.label7.Text = "4";
             // 
+            // btnNewPartie
+            // 
+            this.btnNewPartie.ForeColor = System.Drawing.Color.Blue;
+            this.btnNewPartie.Image = global::JeuxPuissance4.Properties.Resources.filenew1;
+            this.btnNewPartie.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnNewPartie.Name = "btnNewPartie";
+            this.btnNewPartie.Size = new System.Drawing.Size(133, 24);
+            this.btnNewPartie.Text = "Nouvelle Partie";
+            this.btnNewPartie.Click += new System.EventHandler(this.btnNewPartie_Click);
+            // 
+            // btnEnregistrer
+            // 
+            this.btnEnregistrer.ForeColor = System.Drawing.Color.Blue;
+            this.btnEnregistrer.Image = global::JeuxPuissance4.Properties.Resources.filesave;
+            this.btnEnregistrer.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnEnregistrer.Name = "btnEnregistrer";
+            this.btnEnregistrer.Size = new System.Drawing.Size(163, 24);
+            this.btnEnregistrer.Text = "Enregistrer la partie";
+            this.btnEnregistrer.Click += new System.EventHandler(this.btnEnregistrer_Click);
+            // 
+            // btnCharger
+            // 
+            this.btnCharger.ForeColor = System.Drawing.Color.Blue;
+            this.btnCharger.Image = global::JeuxPuissance4.Properties.Resources.images;
+            this.btnCharger.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnCharger.Name = "btnCharger";
+            this.btnCharger.Size = new System.Drawing.Size(156, 24);
+            this.btnCharger.Text = "Charger une partie";
+            this.btnCharger.Click += new System.EventHandler(this.btnCharger_Click);
+            // 
+            // btnQuitter
+            // 
+            this.btnQuitter.ForeColor = System.Drawing.Color.Blue;
+            this.btnQuitter.Image = global::JeuxPuissance4.Properties.Resources.leaveicon;
+            this.btnQuitter.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnQuitter.Name = "btnQuitter";
+            this.btnQuitter.Size = new System.Drawing.Size(79, 24);
+            this.btnQuitter.Text = "Quitter";
+            this.btnQuitter.Click += new System.EventHandler(this.btnQuitter_Click);
+            // 
+            // btnDecon
+            // 
+            this.btnDecon.ForeColor = System.Drawing.Color.Blue;
+            this.btnDecon.Image = global::JeuxPuissance4.Properties.Resources.kisspng_abmeldung_button_icon_shut_cliparts_5a89cae38f35c7_1285697615189798115866;
+            this.btnDecon.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnDecon.Name = "btnDecon";
+            this.btnDecon.Size = new System.Drawing.Size(120, 24);
+            this.btnDecon.Text = "Déconnexion";
+            this.btnDecon.Click += new System.EventHandler(this.btnDecon_Click);
+            // 
             // EcranJeu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -529,6 +531,6 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.ToolStripLabel btnDeco;
+        private System.Windows.Forms.ToolStripButton btnDecon;
     }
 }

@@ -103,6 +103,17 @@ namespace JeuxPuissance4.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap kisspng_abmeldung_button_icon_shut_cliparts_5a89cae38f35c7_1285697615189798115866 {
+            get {
+                object obj = ResourceManager.GetObject("kisspng-abmeldung-button-icon-shut-cliparts-5a89cae38f35c7.1285697615189798115866" +
+                        "", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap leaveicon {
             get {
                 object obj = ResourceManager.GetObject("leaveicon", resourceCulture);
